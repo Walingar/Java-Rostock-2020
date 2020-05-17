@@ -25,3 +25,18 @@ which allows reading images from `resources/image/origin` folder and writing ima
 Using them you can watch how the convolution operation affects images. 
   *  All pictures must be in the `png` format.
   *  When you specify the name of the image, the format should also be indicated (e.g. `pic1.png`).
+  
+## Task 2. Exceptions
+
+Your task is to implement methods: `impl.expression.ExpressionParserImpl.parse`.
+You should write an implementation where TODO is written.
+
+`ExpressionParser` should calculate arithmetic expression `expression`.
+
+`expression` contains integer constants, `+`, `-` and [whitespaces](https://en.wikipedia.org/wiki/Whitespace_character).  
+  * All calculations should be done using `int`.
+  * There can be no whitespace inside constants.
+  * Several `+`, `-` cannot be in a row.
+  * Expression parsing should work in linear time.
+
+Pay attention to the processing of possible parsing and calculation errors.
