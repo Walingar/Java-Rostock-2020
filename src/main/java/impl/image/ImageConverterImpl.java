@@ -29,7 +29,7 @@ public class ImageConverterImpl implements ImageConverter {
         int[][] temp = new int[image.length][image[0].length];
         for(int i=0; i<image.length; i++){ // do for every
             for(int j=0; j<image[i].length; j++){ // single pixel of image in same field
-                // int represented as 4 distinct bytes... re-combine
+                // int represented as 4 distinct bytes... re-combine them
                 int r = image[i][j].getRed() & 0xFF;
                 int g = image[i][j].getGreen() & 0xFF;
                 int b = image[i][j].getBlue() & 0xFF;
