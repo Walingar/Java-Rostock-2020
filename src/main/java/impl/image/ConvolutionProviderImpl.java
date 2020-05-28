@@ -45,7 +45,7 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
                 temp[i][j] = (int)output[i][j];
             }
         }
-        Color[][] output_color = converter.convertToColor(temp);
-        return output_color;
+
+        return converter.convertToColor(temp);
     }
 }
