@@ -13,10 +13,10 @@ public class ImageConverterImpl implements ImageConverter {
         for(int i=0; i<image.length; i++) { // do for every
             for (int j = 0; j < image[i].length; j++) { // single pixel of image
                 // int consists of 4 bytes... split up and save seperately in same field
-                int b = image[i][j] & 0xFF;
-                int g = image[i][j] >> 8 & 0xFF;
-                int r = image[i][j] >> 16 & 0xFF;
-                int a = image[i][j] >> 24 & 0xFF;
+                int b = (image[i][j] >> 0) & 0xFF;
+                int g = (image[i][j] >> 8) & 0xFF;
+                int r = (image[i][j] >> 16) & 0xFF;
+                int a = (image[i][j] >> 24) & 0xFF;
                 temp[i][j] = new Color(r, g, b, a);
             }
         }
