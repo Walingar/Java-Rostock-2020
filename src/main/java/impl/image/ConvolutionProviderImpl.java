@@ -12,11 +12,7 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         ImageConverter converter = new ImageConverterImpl(); // Convert Color
         int[][] temp = converter.convertToRgb(image); // To int
 
-        int r = 0;
-        int g = 0;
-        int b = 0;
-        int a = 255;
-        int color_default = (b) + (g << 8) + (r << 16) + (a << 24); // default color for out of reach core
+        int color_default = 255 << 24; // default color for out of reach core with r,g,b = 0 and a = 255
 
         double kernel_divisor = 0.0;
         for(int i = 0; i < kernel.length; i++){ // calculate kernel divisor
