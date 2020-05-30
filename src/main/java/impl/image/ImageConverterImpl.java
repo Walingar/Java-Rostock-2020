@@ -8,7 +8,7 @@ import java.awt.*;
 public class ImageConverterImpl implements ImageConverter {
     @Override
     public Color[][] convertToColor(int[][] image) {
-        // TODO: write implementation here
+
         Color[][] temp = new Color[image.length][image[0].length]; // new temp array for Color types
         for(int i=0; i<image.length; i++) { // do for every
             for (int j = 0; j < image[i].length; j++) { // single pixel of image
@@ -20,6 +20,7 @@ public class ImageConverterImpl implements ImageConverter {
                 temp[i][j] = new Color(r, g, b, a);
             }
         }
+
         return temp;
     }
 
