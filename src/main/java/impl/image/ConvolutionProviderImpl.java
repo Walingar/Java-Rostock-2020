@@ -8,54 +8,45 @@ import java.awt.*;
 public class ConvolutionProviderImpl implements ConvolutionProvider {
     @Override
     public Color[][] apply(Color[][] image, double[][] kernel) {
-        // TODO: write implementation here
 
-        ImageConverter converter = new ImageConverterImpl(); // Convert Color
-        int[][] temp = converter.convertToRgb(image); // To int
-        double[][] output = new double[temp.length][temp[0].length]; // for calculation with kernel
+        int kernelSizeRow = kernel.length;
+        int kernelRadiusRow = kernelSizeRow / 2;
+        int kernelSizeColumn = kernel[0].length;
+        int kernelRadiusColumn = kernelSizeColumn / 2;
+        int imageSizeRow = image.length;
+        int imageSizeColumn = image[0].length;
+        Color[][] output = new Color[imageSizeRow][imageSizeColumn];
 
-        int color_default = 255 << 24; // default color for out of reach core with r,g,b = 0 and a = 255
+        for (int imageRow = 0; imageRow < imageSizeRow; imageRow++) {
+            for (int imageColumn = 0; imageColumn < imageSizeColumn; imageColumn++) {
 
-        double kernel_divisor = 0.0;
-        for(int i = 0; i < kernel.length; i++){ // calculate kernel divisor
-            for(int j = 0; j < kernel[i].length; j++){
-                kernel_divisor = kernel_divisor + kernel[i][j];
-            }
-        }
-        int kernel_navigator_row_i = (int)Math.floor(kernel.length/2.0); // navigator for rows in image
-        int kernel_navigator_column_j = (int)Math.floor(kernel[0].length/2.0); // navigator for columns in image
+                int redNew = 0;
+                int greenNew = 0;
+                int blueNew=0;
 
-        for(int i_o = 0; i_o < output.length; i_o++) { // image array with i_o image rows
-            for(int j_o = 0; j_o < output[i_o].length; j_o++) { // and j_o image columns
-                output[i_o][j_o] = 0;
+                for (int kernelRow = 0; kernelRow < kernelSizeRow; kernelRow++) {
+                    for (int kernelColumn = 0; kernelColumn < kernelSizeColumn; kernelColumn++) {
 
-                for (int i_k = 0; i_k < kernel.length; i_k++) { // kernel array with i_k kernel rows
-                    for (int j_k = 0; j_k < kernel[i_k].length; j_k++) { // and j_k kernel columns
+                        int rowNavigator = kernelRow - kernelRadiusRow; // can be -1, 0, +1 for 3x3 kernel
+                        int columnNavigator = kernelColumn - kernelRadiusColumn; // can be -1, 0, +1 for 3x3 kernel
 
-                        double help;
-                        int n_x = i_k - kernel_navigator_row_i; // navigate in image array due to kernel array (can be -1, 0, +1 for 3x3 kernel)
-                        int n_y = j_k - kernel_navigator_column_j; // navigate in image array due to kernel array (can be -1, 0, +1 for 3x3 kernel)
-
-                        if( (i_o + n_x > -1) && (i_o + n_x < output.length) && (j_o + n_y > -1) && (j_o + n_y < output[i_o].length) ){ // core in image range
-                            help = (temp[i_o+n_x][j_o+n_y] * kernel[i_k][j_k]); // calculate as usual
-                        } else{ // core out of image range
-                            help = color_default * kernel[i_k][j_k]; // calculate with default color
+                        // if core in image range ... else do nothing, as * with 0 is always 0
+                        if ((imageRow + rowNavigator > -1) && (imageRow + rowNavigator < output.length) && (imageColumn + columnNavigator > -1) && (imageColumn + columnNavigator < output[imageRow].length)) {
+                            int redTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getRed();
+                            int greenTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getGreen();
+                            int blueTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getBlue();
+                            redTemp = (int)Math.floor(redTemp * kernel[kernelRow][kernelColumn]);
+                            greenTemp = (int)Math.floor(greenTemp * kernel[kernelRow][kernelColumn]);
+                            blueTemp = (int)Math.floor(blueTemp * kernel[kernelRow][kernelColumn]);
+                            redNew = redNew + redTemp;
+                            greenNew = greenNew + greenTemp;
+                            blueNew = blueNew + blueTemp;
                         }
-
-                        output[i_o][j_o] = output[i_o][j_o] + Math.round(help); // round after multiplication
                     }
                 }
-
-                output[i_o][j_o] = (Math.round(output[i_o][j_o] / kernel_divisor)); // apply kernel divisor to sum of kernel fields
+                output[imageRow][imageColumn] = new Color(redNew, greenNew, blueNew, 255);
             }
         }
-
-        for(int i = 0; i < temp.length; i++){ // convert double back to int to enable re-transforming to Color
-            for(int j = 0; j < temp[i].length; j++){
-                temp[i][j] = (int)output[i][j];
-            }
-        }
-
-        return converter.convertToColor(temp);
+        return output;
     }
 }
