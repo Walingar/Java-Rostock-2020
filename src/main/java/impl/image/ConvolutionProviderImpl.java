@@ -8,47 +8,46 @@ import java.awt.*;
 public class ConvolutionProviderImpl implements ConvolutionProvider {
     @Override
     public Color[][] apply(Color[][] image, double[][] kernel) {
-        // TODO: write implementation here
-        ImageConverter converter = new ImageConverterImpl(); // Convert Color
-        int[][] temp = converter.convertToRgb(image); // new variable int[][] temp, convert from Color (r,g,b,a) to int
+        int kernelSizeRow = kernel.length;
+        int kernelRadiusRow = kernelSizeRow / 2;
+        int kernelSizeColumn = kernel[0].length;
+        int kernelRadiusColumn = kernelSizeColumn / 2;
+        int imageSizeRow = image.length;
+        int imageSizeColumn = image[0].length;
 
-        int r = 0;
-        int g = 0;
-        int b = 0;
-        int a = 0xFF;
+        Color[][] output = new Color[imageSizeRow][imageSizeColumn];
 
-        double[][] result = new double[temp.length][temp[0].length]; //result
+        for (int imageRow = 0; imageRow < imageSizeRow; imageRow++) {
+            for (int imageColumn = 0; imageColumn < imageSizeColumn; imageColumn++) {
 
-        for(int i_r = 0; i_r < result.length; i_r++) { // do it for every pixel in result
-            for(int j_r = 0; j_r < result[i_r].length; j_r++) {
-                result[i_r][j_r] = 0;
+                int redNew = 0;
+                int greenNew = 0;
+                int blueNew=0;
 
-                for (int i_k = 0; i_k < kernel.length; i_k++) {
-                    for (int j_k = 0; j_k < kernel[i_k].length; j_k++) {
-                        double help = 0;
+                for (int kernelRow = 0; kernelRow < kernelSizeRow; kernelRow++) {
+                    for (int kernelColumn = 0; kernelColumn < kernelSizeColumn; kernelColumn++) {
 
-                        int x = i_k - (int)Math.floor(kernel.length/2.0);
-                        int y = j_k - (int)Math.floor(kernel[i_k].length/2.0);
+                        int rowNavigator = kernelRow - kernelRadiusRow; // can be -1, 0, +1 for 3x3 kernel
+                        int columnNavigator = kernelColumn - kernelRadiusColumn; // can be -1, 0, +1 for 3x3 kernel
 
-                        if((i_r + x < 0) && (i_r + x >= result.length) && (j_r + y < 0) || (j_r + y >= result[i_r].length)){ // if core element out of image
-                            help = ((b) + (g << 8) + (r << 16) + (a << 24)) * kernel[i_k][j_k]; // return default value
+                        // if core in image range ... else do nothing, as * with 0 is always 0
+                        if ((imageRow + rowNavigator > -1) && (imageRow + rowNavigator < output.length) && (imageColumn + columnNavigator > -1) && (imageColumn + columnNavigator < output[imageRow].length)) {
+                            int redTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getRed();
+                            int greenTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getGreen();
+                            int blueTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getBlue();
+                            redTemp = (int)Math.floor(redTemp * kernel[kernelRow][kernelColumn]);
+                            greenTemp = (int)Math.floor(greenTemp * kernel[kernelRow][kernelColumn]);
+                            blueTemp = (int)Math.floor(blueTemp * kernel[kernelRow][kernelColumn]);
+                            redNew = redNew + redTemp;
+                            greenNew = greenNew + greenTemp;
+                            blueNew = blueNew + blueTemp;
                         }
-                        else{
-                            help = (temp[i_r+x][j_r+y] * kernel[i_k][j_k]); // calculation of the new value of the pixel
-                        }
-                        result[i_r][j_r] = result[i_r][j_r] + Math.round(help);
                     }
                 }
+                output[imageRow][imageColumn] = new Color(redNew, greenNew, blueNew, 255);
             }
         }
-
-        for(int i = 0; i < temp.length; i++){
-            for(int j = 0; j < temp[i].length; j++){
-                temp[i][j] = (int)result[i][j]; // convert double back to int
-            }
-        }
-        Color[][] result_color = converter.convertToColor(temp); // Converting back from int[][] to Color[][]
-        return result_color;
+        return output;
     }
 
 }
