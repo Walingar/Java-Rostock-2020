@@ -10,8 +10,8 @@ public class ImageConverterImpl implements ImageConverter {
     public Color[][] convertToColor(int[][] image) {
         Color[][] output = new Color[image.length][image[0].length];
 
-        for (int rowCounter = 0; rowCounter < image.length; rowCounter++) { // do it for every line of pixels in the image
-            for (int columnCounter = 0; columnCounter < image[rowCounter].length; columnCounter++) { // do it for every column of pixels in the image
+        for (int rowCounter = 0; rowCounter < image.length; rowCounter++) {
+            for (int columnCounter = 0; columnCounter < image[rowCounter].length; columnCounter++) {
                 int blue = image[rowCounter][columnCounter] & 0xFF;
                 int green = image[rowCounter][columnCounter] >> 8 & 0xFF;
                 int red = image[rowCounter][columnCounter] >> 16 & 0xFF;
