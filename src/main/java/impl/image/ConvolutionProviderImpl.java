@@ -9,9 +9,11 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
     @Override
     public Color[][] apply(Color[][] image, double[][] kernel) {
         int kernelSizeRow = kernel.length;
-        int kernelRadiusRow = kernelSizeRow / 2;
         int kernelSizeColumn = kernel[0].length;
+
+        int kernelRadiusRow = kernelSizeRow / 2;
         int kernelRadiusColumn = kernelSizeColumn / 2;
+
         int imageSizeRow = image.length;
         int imageSizeColumn = image[0].length;
 
@@ -20,31 +22,37 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         for (int imageRow = 0; imageRow < imageSizeRow; imageRow++) {
             for (int imageColumn = 0; imageColumn < imageSizeColumn; imageColumn++) {
 
-                int redNew = 0;
-                int greenNew = 0;
-                int blueNew=0;
+                int redOutput = 0;
+                int greenOutput = 0;
+                int blueOutput=0;
 
                 for (int kernelRow = 0; kernelRow < kernelSizeRow; kernelRow++) {
                     for (int kernelColumn = 0; kernelColumn < kernelSizeColumn; kernelColumn++) {
 
-                        int rowNavigator = kernelRow - kernelRadiusRow; // can be -1, 0, +1 for 3x3 kernel
-                        int columnNavigator = kernelColumn - kernelRadiusColumn; // can be -1, 0, +1 for 3x3 kernel
+                        // shifts for navigation through kernel based on the selected pixel
+                        int rowShift = kernelRow - kernelRadiusRow;
+                        int columnShift = kernelColumn - kernelRadiusColumn;
 
-                        // if core in image range ... else do nothing, as * with 0 is always 0
-                        if ((imageRow + rowNavigator > -1) && (imageRow + rowNavigator < output.length) && (imageColumn + columnNavigator > -1) && (imageColumn + columnNavigator < output[imageRow].length)) {
-                            int redTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getRed();
-                            int greenTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getGreen();
-                            int blueTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getBlue();
+                        int rowDisplacement = imageRow + rowShift;
+                        int columnDisplacement = imageColumn + columnShift;
+
+                        // if kernelcoordinates based on the selected pixel fits is inside the image
+                        if ((rowDisplacement > -1) && (rowDisplacement < image.length) && (columnDisplacement > -1) && (columnDisplacement < image[imageRow].length)) {
+                            int redTemp = image[rowDisplacement][columnDisplacement].getRed();
+                            int greenTemp = image[rowDisplacement][columnDisplacement].getGreen();
+                            int blueTemp = image[rowDisplacement][columnDisplacement].getBlue();
+
                             redTemp = (int)Math.floor(redTemp * kernel[kernelRow][kernelColumn]);
                             greenTemp = (int)Math.floor(greenTemp * kernel[kernelRow][kernelColumn]);
                             blueTemp = (int)Math.floor(blueTemp * kernel[kernelRow][kernelColumn]);
-                            redNew = redNew + redTemp;
-                            greenNew = greenNew + greenTemp;
-                            blueNew = blueNew + blueTemp;
+
+                            redOutput = redOutput + redTemp;
+                            greenOutput = greenOutput + greenTemp;
+                            blueOutput = blueOutput + blueTemp;
                         }
                     }
                 }
-                output[imageRow][imageColumn] = new Color(redNew, greenNew, blueNew, 255);
+                output[imageRow][imageColumn] = new Color(redOutput, greenOutput, blueOutput, 255);
             }
         }
         return output;
