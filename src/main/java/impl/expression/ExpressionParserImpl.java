@@ -40,9 +40,19 @@ public class ExpressionParserImpl implements ExpressionParser {
                         result = parsedInt;
                     } else {
                         if (parsedOperator.equals("+")) {
-                            result += parsedInt;
+                            long rangeTestInt = result + parsedInt;
+                            if (rangeTestInt >= Integer.MAX_VALUE){
+                                throw new ArithmeticException(originalExpression);
+                            } else {
+                                result += parsedInt;
+                            }
                         } else {
-                            result -= parsedInt;
+                            long rangeTestInt = result - parsedInt;
+                            if (rangeTestInt <= Integer.MIN_VALUE){
+                                throw new ArithmeticException(originalExpression);
+                            } else {
+                                result -= parsedInt;
+                            }
                         }
                     }
                     parsedInteger = "";
