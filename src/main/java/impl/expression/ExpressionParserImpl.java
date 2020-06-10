@@ -35,13 +35,17 @@ public class ExpressionParserImpl implements ExpressionParser {
                 if (stringIndex == 0 && currentElement == '-'){
                     parsedOperator = ""+currentElement;
                 } else {
+                    long checkIntOrLong = Long.parseLong(parsedInteger);
+                    if (checkIntOrLong > Integer.MAX_VALUE || checkIntOrLong < Integer.MIN_VALUE) {
+                        throw new ParseException(originalExpression);
+                    }
                     int parsedInt = Integer.parseInt(parsedInteger);
                     if (parsedOperator.equals("")) {
                         result = parsedInt;
                     } else {
                         if (parsedOperator.equals("+")) {
-                            long rangeTestInt = result + parsedInt;
-                            if (rangeTestInt >= Integer.MAX_VALUE){
+                            long checkIntRange = result + parsedInt;
+                            if (checkIntRange >= Integer.MAX_VALUE || checkIntRange <= Integer.MIN_VALUE){
                                 throw new ArithmeticException(originalExpression);
                             } else {
                                 result += parsedInt;
