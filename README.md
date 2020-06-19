@@ -40,3 +40,12 @@ You should write an implementation where TODO is written.
   * Expression parsing should work in linear time.
 
 Pay attention to the processing of possible parsing and calculation errors.
+
+## Task 3. Queue
+
+Your task is to implement the interface `api.queue.IntQueue` in two different ways: using array and using linked list.
+Create implemented instances in methods `impl.queue.ArrayQueueFactory.getInstance` and `impl.queue.LinkedQueueFactory.getInstance`.
+
+The use of Java Collections framework is prohibited.
+
+Note the extraction of the common code.
