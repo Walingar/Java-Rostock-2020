@@ -66,3 +66,12 @@ Create implemented instances in methods `impl.weather.DayTemperatureInfoParserFa
 `YearTemperatureStats` should be able to update its state using given `DayTemperatureInfo` [in constant time].
 
 `DayTemperatureInfoParser` should be able to create `DayTemperatureInfo` from the raw `String`. You can assume that this `String` has the following format: `day.month temperature`.
+
+# Task 5. Files
+
+Your task is to implement the interfaces `api.file.FileEncodingReader` and `api.file.FileEncodingWriter`.
+Create implemented instances in methods `impl.file.FileEncodingReaderFactory.getInstance` and `impl.file.FileEncodingWriterFactory.getInstance`.
+
+`FileEncodingReader` should create `java.io.Reader` from the given file with the specific charset.
+
+`FileEncodingWriter` should be able to create a new file and write data from `InputStream` used `dataEncoding` to this file with specific `fileEncoding` (`UTF-8`, if `fileEncoding` is not given).
