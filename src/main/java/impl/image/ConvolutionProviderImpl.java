@@ -22,7 +22,7 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
 
                 int redNew = 0;
                 int greenNew = 0;
-                int blueNew=0;
+                int blueNew = 0;
 
                 for (int kernelRow = 0; kernelRow < kernelSizeRow; kernelRow++) {
                     for (int kernelColumn = 0; kernelColumn < kernelSizeColumn; kernelColumn++) {
@@ -31,16 +31,18 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
                         int columnNavigator = kernelColumn - kernelRadiusColumn; // can be -1, 0, +1 for 3x3 kernel
 
                         // if core in image range ... else do nothing, as * with 0 is always 0
-                        if ((imageRow + rowNavigator > -1) && (imageRow + rowNavigator < output.length) && (imageColumn + columnNavigator > -1) && (imageColumn + columnNavigator < output[imageRow].length)) {
+                        int imageRowCorrection = imageRow + rowNavigator;
+                        int imageColumnCorrection = imageColumn + columnNavigator;
+                        if ((imageRowCorrection > -1) && (imageRowCorrection < output.length) && (imageColumnCorrection > -1) && (imageColumnCorrection < output[imageRow].length)) {
                             int redTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getRed();
                             int greenTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getGreen();
                             int blueTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getBlue();
-                            redTemp = (int)Math.floor(redTemp * kernel[kernelRow][kernelColumn]);
-                            greenTemp = (int)Math.floor(greenTemp * kernel[kernelRow][kernelColumn]);
-                            blueTemp = (int)Math.floor(blueTemp * kernel[kernelRow][kernelColumn]);
-                            redNew = redNew + redTemp;
-                            greenNew = greenNew + greenTemp;
-                            blueNew = blueNew + blueTemp;
+                            redTemp = (int)(redTemp * kernel[kernelRow][kernelColumn]);
+                            greenTemp = (int)(greenTemp * kernel[kernelRow][kernelColumn]);
+                            blueTemp = (int)(blueTemp * kernel[kernelRow][kernelColumn]);
+                            redNew += redTemp;
+                            greenNew += greenTemp;
+                            blueNew += blueTemp;
                         }
                     }
                 }
