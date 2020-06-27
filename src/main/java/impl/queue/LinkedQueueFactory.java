@@ -1,27 +1,71 @@
 package impl.queue;
 
 import api.queue.IntQueue;
-import org.w3c.dom.Node;
 
 import java.util.LinkedList;
 
-public class LinkedQueueFactory implements IntQueue{
+class QueueNode {
+    private Integer value;
+    private QueueNode next;
+    private QueueNode previous;
+
+    public QueueNode() {
+        this.value = null;
+        this.next = null;
+        this.previous = null;
+    }
+
+    public Integer getValue() {
+        return value;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
+    }
+
+    public QueueNode getNext() {
+        return next;
+    }
+
+    public void setNext(QueueNode next) {
+        this.next = next;
+    }
+
+    public QueueNode getPrevious() {
+        return previous;
+    }
+
+    public void setPrevious(QueueNode previous) {
+        this.previous = previous;
+    }
+}
+
+public class LinkedQueueFactory implements IntQueue {
     private static int capacity;
-    private static LinkedList<Integer> queueLinkedList;
+    private static QueueNode queueLinked;
 
     public static IntQueue getInstance(int maxSize) {
         capacity = maxSize;
-        queueLinkedList = new LinkedList<Integer>();
+        queueLinked = new QueueNode();
         return new LinkedQueueFactory();
     }
 
     @Override
     public void add(int e) {
         int currentSize = getSize();
-        if (currentSize == capacity){
+        if (currentSize == capacity) {
             throw new IllegalStateException();
+        } else if (currentSize == 0) {
+            queueLinked.setValue(e);
         } else {
-            queueLinkedList.add(e);
+            QueueNode assist = queueLinked;
+            while (assist.getNext() != null) {
+                assist = assist.getNext();
+            }
+            QueueNode newElement = new QueueNode();
+            newElement.setValue(e);
+            newElement.setPrevious(assist);
+            assist.setNext(newElement);
         }
     }
 
@@ -31,8 +75,13 @@ public class LinkedQueueFactory implements IntQueue{
         if (currentSize == 0) {
             return null;
         } else {
-            Integer output = queueLinkedList.getFirst();
-            queueLinkedList.removeFirst();
+            Integer output = queueLinked.getValue();
+            if (queueLinked.getNext() == null) {
+                queueLinked = new QueueNode();
+            } else {
+                queueLinked = queueLinked.getNext();
+                queueLinked.setPrevious(null);
+            }
             return output;
         }
     }
@@ -43,12 +92,22 @@ public class LinkedQueueFactory implements IntQueue{
         if (currentSize == 0) {
             return null;
         } else {
-            return queueLinkedList.getFirst();
+            return queueLinked.getValue();
         }
     }
 
     @Override
     public int getSize() {
-        return queueLinkedList.size();
+        if (queueLinked.getValue() == null) {
+            return 0;
+        } else {
+            int size = 1;
+            QueueNode assist = queueLinked;
+            while (assist.getNext() != null) {
+                size += 1;
+                assist = assist.getNext();
+            }
+            return size;
+        }
     }
 }
