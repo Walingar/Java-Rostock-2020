@@ -7,14 +7,11 @@ public class ExpressionParserImpl implements ExpressionParser {
     @Override
     public int parse(String expression) throws ParseException {
 
-        if (expression == null){
-            throw new IllegalArgumentException();
+        if (expression == null) {
+            throw new IllegalArgumentException("String is empty.");
         }
 
         int result = 0;
-        String originalExpression = expression;
-        expression = expression.replaceAll("\\s+", ""); // remove whitespaces
-
         int stringLength = expression.length();
         String parsedInteger = "";
         String parsedOperator = "";
@@ -23,49 +20,56 @@ public class ExpressionParserImpl implements ExpressionParser {
 
             char currentElement = expression.charAt(stringIndex);
 
-            if (Character.isLetter(currentElement)) {
-                throw new ParseException(originalExpression);
-            }
+            if (!Character.isWhitespace(currentElement)) {
 
-            if (Character.isDigit(currentElement)) {
-                parsedInteger += currentElement;
-            }
+                if (Character.isLetter(currentElement)) {
+                    throw new ParseException("Expression consists of letters.");
+                }
 
-            if (!Character.isDigit(currentElement) || stringIndex == stringLength - 1) {
-                if (stringIndex == 0 && currentElement == '-'){
-                    parsedOperator = ""+currentElement;
-                } else {
-                    long checkIntOrLong = Long.parseLong(parsedInteger);
-                    if (checkIntOrLong > Integer.MAX_VALUE || checkIntOrLong < Integer.MIN_VALUE) {
-                        throw new ParseException(originalExpression);
-                    }
-                    int parsedInt = Integer.parseInt(parsedInteger);
-                    if (parsedOperator.equals("")) {
-                        result = parsedInt;
+                if (Character.isDigit(currentElement)) {
+                    parsedInteger += currentElement;
+                }
+
+                if (!Character.isDigit(currentElement) || stringIndex == stringLength - 1) {
+
+                    if (stringIndex == 0 && currentElement == '-') {
+                        parsedOperator = "" + currentElement;
                     } else {
-                        if (parsedOperator.equals("+")) {
-                            long checkIntRange = result + parsedInt;
-                            if (checkIntRange >= Integer.MAX_VALUE || checkIntRange <= Integer.MIN_VALUE){
-                                throw new ArithmeticException(originalExpression);
-                            } else {
-                                result += parsedInt;
-                            }
+                        long checkIntOrLong = Long.parseLong(parsedInteger);
+
+                        if (checkIntOrLong > Integer.MAX_VALUE || checkIntOrLong < Integer.MIN_VALUE) {
+                            throw new ParseException("Expression contains too high numbers for int.");
+                        }
+                        int parsedInt = Integer.parseInt(parsedInteger);
+
+                        if (parsedOperator.equals("")) {
+                            result = parsedInt;
                         } else {
-                            long rangeTestInt = result - parsedInt;
-                            if (rangeTestInt <= Integer.MIN_VALUE){
-                                throw new ArithmeticException(originalExpression);
+
+                            if (parsedOperator.equals("+")) {
+                                long checkIntRange = result + parsedInt;
+
+                                if (checkIntRange >= Integer.MAX_VALUE || checkIntRange <= Integer.MIN_VALUE) {
+                                    throw new ArithmeticException("Int value out of range after calculating.");
+                                } else {
+                                    result += parsedInt;
+                                }
                             } else {
-                                result -= parsedInt;
+                                long rangeTestInt = result - parsedInt;
+
+                                if (rangeTestInt <= Integer.MIN_VALUE) {
+                                    throw new ArithmeticException("Int value out of range after calculating.");
+                                } else {
+                                    result -= parsedInt;
+                                }
                             }
                         }
+                        parsedInteger = "";
+                        parsedOperator = "" + currentElement;
                     }
-                    parsedInteger = "";
-                    parsedOperator = "" + currentElement;
                 }
             }
         }
-
         return result;
-
     }
 }
