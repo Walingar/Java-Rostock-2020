@@ -15,12 +15,13 @@ public class ExpressionParserImpl implements ExpressionParser {
         int stringLength = expression.length();
         String parsedInteger = "";
         String parsedOperator = "";
+        int firstRelevantCharacter = 0;
 
         for (int stringIndex = 0; stringIndex < stringLength; stringIndex++) {
 
             char currentElement = expression.charAt(stringIndex);
 
-            if (!Character.isWhitespace(currentElement)) {
+            if (!Character.isWhitespace(currentElement) || stringIndex == stringLength - 1) {
 
                 if (Character.isLetter(currentElement)) {
                     throw new ParseException("Expression consists of letters.");
@@ -31,8 +32,7 @@ public class ExpressionParserImpl implements ExpressionParser {
                 }
 
                 if (!Character.isDigit(currentElement) || stringIndex == stringLength - 1) {
-
-                    if (stringIndex == 0 && currentElement == '-') {
+                    if (stringIndex == firstRelevantCharacter && currentElement == '-') {
                         parsedOperator = "" + currentElement;
                     } else {
                         long checkIntOrLong = Long.parseLong(parsedInteger);
@@ -68,6 +68,8 @@ public class ExpressionParserImpl implements ExpressionParser {
                         parsedOperator = "" + currentElement;
                     }
                 }
+            } else {
+                firstRelevantCharacter += 1;
             }
         }
         return result;
