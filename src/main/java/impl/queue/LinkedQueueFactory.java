@@ -55,7 +55,8 @@ public class LinkedQueueFactory implements IntQueue {
         int currentSize = getSize();
         if (currentSize == capacity) {
             throw new IllegalStateException();
-        } else if (currentSize == 0) {
+        }
+        if (currentSize == 0) {
             queueLinked.setValue(e);
         } else {
             QueueNode assist = queueLinked;
@@ -77,7 +78,7 @@ public class LinkedQueueFactory implements IntQueue {
         } else {
             Integer output = queueLinked.getValue();
             if (queueLinked.getNext() == null) {
-                queueLinked = new QueueNode();
+                queueLinked.setValue(null);
             } else {
                 queueLinked = queueLinked.getNext();
                 queueLinked.setPrevious(null);

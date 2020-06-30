@@ -2,9 +2,10 @@ package impl.queue;
 
 import api.queue.IntQueue;
 
-public class ArrayQueueFactory implements IntQueue{
+public class ArrayQueueFactory implements IntQueue {
     private static int capacity;
     private static Integer[] queueArray;
+    private static int currentSize;
 
     public static IntQueue getInstance(int maxSize) {
         capacity = maxSize;
@@ -15,7 +16,7 @@ public class ArrayQueueFactory implements IntQueue{
     @Override
     public void add(int e) {
         int currentSize = getSize();
-        if (currentSize == capacity){
+        if (currentSize == capacity) {
             throw new IllegalStateException();
         } else {
             queueArray[currentSize] = e;
@@ -29,10 +30,14 @@ public class ArrayQueueFactory implements IntQueue{
             return null;
         } else {
             Integer output = queueArray[0];
-            for (int currentElement = 1; currentElement < capacity; currentElement++) {
-                int newPosition = currentElement - 1;
-                if (queueArray[currentElement] != null) {
-                    queueArray[newPosition] = queueArray[currentElement];
+            for (int newPosition = 0; newPosition < capacity; newPosition++) {
+                int oldPosition = newPosition + 1;
+                if (oldPosition == capacity) {
+                    queueArray[newPosition] = null;
+                    break;
+                }
+                if (queueArray[oldPosition] != null) {
+                    queueArray[newPosition] = queueArray[oldPosition];
                 } else {
                     queueArray[newPosition] = null;
                     break;
