@@ -5,6 +5,34 @@ import api.weather.DayTemperatureInfoParser;
 
 import java.time.Month;
 
+class DayTemperatureInfoFactory implements DayTemperatureInfo {
+    private static int day;
+    private static Month month;
+    private static int temperature;
+
+    public static DayTemperatureInfoFactory getInstance(int dayValue, Month monthValue, int temperatureValue) {
+        day = dayValue;
+        month = monthValue;
+        temperature = temperatureValue;
+        return new DayTemperatureInfoFactory();
+    }
+
+    @Override
+    public int getDay() {
+        return day;
+    }
+
+    @Override
+    public Month getMonth() {
+        return month;
+    }
+
+    @Override
+    public int getTemperature() {
+        return temperature;
+    }
+}
+
 public class DayTemperatureInfoParserFactory implements DayTemperatureInfoParser {
 
     public static DayTemperatureInfoParser getInstance() {
@@ -12,31 +40,25 @@ public class DayTemperatureInfoParserFactory implements DayTemperatureInfoParser
     }
 
     @Override
-    public DayTemperatureInfo parse(String rawData) {
+    public DayTemperatureInfo parse(String expression) {
 
-        int stringLength = rawData.length();
+        int stringLength = expression.length();
         String parsedDay = "";
         String parsedMonth = "";
         String parsedTemperature = "";
-        String parsedSeparator = "";
-        String parsedOperator = "";
+        int separatorCount = 0;
+        Boolean negativeTemperature = false;
 
         for (int stringIndex = 0; stringIndex < stringLength; stringIndex++) {
-            char currentElement = rawData.charAt(stringIndex);
+            char currentElement = expression.charAt(stringIndex);
             if (Character.isWhitespace(currentElement) || currentElement == '.') {
-                parsedSeparator += currentElement;
+                separatorCount++;
             } else {
-                if (Character.isDigit(currentElement) && (parsedSeparator.length() == 0)) {
-                    parsedDay += currentElement;
-                }
-                if (Character.isDigit(currentElement) && (parsedSeparator.length() == 1)) {
-                    parsedMonth += currentElement;
-                }
-                if (Character.isDigit(currentElement) && (parsedSeparator.length() == 2)) {
-                    parsedTemperature += currentElement;
-                }
-                if (currentElement == '-' && (parsedSeparator.length() == 2)) {
-                    parsedOperator += currentElement;
+                if (separatorCount == 0) parsedDay += currentElement;
+                if (separatorCount == 1) parsedMonth += currentElement;
+                if (separatorCount == 2) {
+                    if (currentElement == '-') negativeTemperature = true;
+                    else parsedTemperature += currentElement;
                 }
             }
         }
@@ -45,9 +67,9 @@ public class DayTemperatureInfoParserFactory implements DayTemperatureInfoParser
         int parsedMonthInt = Integer.parseInt(parsedMonth);
         Month month = Month.of(parsedMonthInt);
         int parsedTemperatureInt = Integer.parseInt(parsedTemperature);
-        if (parsedOperator.length() != 0) {
+        if (negativeTemperature) {
             parsedTemperatureInt *= -1;
         }
-        return null;
+        return DayTemperatureInfoFactory.getInstance(parsedDayInt, month, parsedTemperatureInt);
     }
 }

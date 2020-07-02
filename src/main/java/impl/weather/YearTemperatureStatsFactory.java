@@ -31,7 +31,6 @@ public class YearTemperatureStatsFactory implements YearTemperatureStats {
         int monthIndex = month.getValue() - 1;
         List<DayTemperatureInfo> monthList = dateTemperature.get(monthIndex);
         monthList.set(dayIndex, info);
-        dateTemperature.set(monthIndex, monthList);
     }
 
     @Override
