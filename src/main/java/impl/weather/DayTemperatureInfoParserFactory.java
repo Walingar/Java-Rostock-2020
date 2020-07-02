@@ -6,15 +6,15 @@ import api.weather.DayTemperatureInfoParser;
 import java.time.Month;
 
 class DayTemperatureInfoFactory implements DayTemperatureInfo {
-    private static int day;
-    private static Month month;
-    private static int temperature;
+    private int day;
+    private Month month;
+    private int temperature;
 
-    public static DayTemperatureInfoFactory getInstance(int dayValue, Month monthValue, int temperatureValue) {
+    public DayTemperatureInfoFactory getInstance(int dayValue, Month monthValue, int temperatureValue) {
         day = dayValue;
         month = monthValue;
         temperature = temperatureValue;
-        return new DayTemperatureInfoFactory();
+        return this;
     }
 
     @Override
@@ -70,6 +70,7 @@ public class DayTemperatureInfoParserFactory implements DayTemperatureInfoParser
         if (negativeTemperature) {
             parsedTemperatureInt *= -1;
         }
-        return DayTemperatureInfoFactory.getInstance(parsedDayInt, month, parsedTemperatureInt);
+        DayTemperatureInfoFactory output = new DayTemperatureInfoFactory();
+        return output.getInstance(parsedDayInt, month, parsedTemperatureInt);
     }
 }
