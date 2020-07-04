@@ -2,31 +2,12 @@ package impl.queue;
 
 import api.queue.IntQueue;
 
-public class LinkedQueueFactory implements IntQueue{
+public class LinkedQueueFactory {
 
     public static IntQueue getInstance(int maxSize) {
-        capacity = maxSize;
-        element = new QueueNode();
-        return new LinkedQueueFactory();
+        IntQueue lqueue = new LinkedQueue(maxSize);
+        return lqueue;
     }
 
-    @Override
-    public void add(int e) {
 
-    }
-
-    @Override
-    public Integer remove() {
-        return null;
-    }
-
-    @Override
-    public Integer element() {
-        return null;
-    }
-
-    @Override
-    public int getSize() {
-        return 0;
-    }
 }
