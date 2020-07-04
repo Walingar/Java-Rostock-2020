@@ -5,11 +5,11 @@ import api.queue.IntQueue;
 public class ArrayQueue implements IntQueue {
 
     private final int capacity;
-    private final int currentSize;
+    private int currentSize;
     private final Integer[] arrayQueue;
     private int currentIndex;
 
-    public ArrayQueue (int maxSize){
+    public ArrayQueue(int maxSize) {
         capacity = maxSize;
         arrayQueue = new Integer[capacity];
         currentIndex = 0;
@@ -19,23 +19,28 @@ public class ArrayQueue implements IntQueue {
     @Override
     public void add(int input) {
         if (currentIndex == capacity) {
-            System.out.println("Queue full!");
-        } else {
-            arrayQueue[currentIndex] = input;
-            currentIndex++;
+            throw new IllegalStateException();
         }
+        arrayQueue[currentIndex] = input;
+        currentIndex++;
+
     }
 
     @Override
     public Integer remove() {
         if (currentIndex == 0) {
-            System.out.println("Queue empty!");
             return null;
-        } else {
-            int removedInteger = arrayQueue[currentIndex - 1];
-            currentIndex--;
-            return removedInteger;
         }
+
+        int removedInteger = arrayQueue[0];
+        for (int i = 0; i < arrayQueue.length - 1; i++) {
+            arrayQueue[i] = arrayQueue[i + 1];
+        }
+        arrayQueue[arrayQueue.length - 1] = null;
+        arrayQueue[currentIndex-1] = null;
+        currentIndex--;
+        return removedInteger;
+
     }
 
     @Override
@@ -45,6 +50,10 @@ public class ArrayQueue implements IntQueue {
 
     @Override
     public int getSize() {
-        return arrayQueue.length;
+        int counter = 0;
+        for (int i = 0; i < arrayQueue.length; i ++)
+            if (arrayQueue[i] != null)
+                counter ++;
+        return counter;
     }
 }

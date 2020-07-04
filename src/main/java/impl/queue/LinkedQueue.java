@@ -21,13 +21,14 @@ public class LinkedQueue implements IntQueue {
         }
 
         QNode newNode = new QNode(input);
-        QNode iterator = front;
 
         if (this.front == null) {
             newNode.setPrev(null);
+            newNode.setNext(null);
             this.front = newNode;
-            throw new IllegalStateException();
         }
+
+        QNode iterator = front;
         while (iterator.getNext() != null) {
             iterator = iterator.getNext();
         }
@@ -52,6 +53,11 @@ public class LinkedQueue implements IntQueue {
 
     @Override
     public Integer element() {
+
+        if (this.front == null) {
+            throw new NullPointerException();
+        }
+
         return this.front.getKey();
     }
 
