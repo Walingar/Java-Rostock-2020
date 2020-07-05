@@ -7,7 +7,7 @@ public class LinkedQueue implements IntQueue {
     private QNode end;
     private final int capacity;
 
-    public LinkedQueue(int maxSize){
+    public LinkedQueue(int maxSize) {
         front = null;
         end = null;
         capacity = maxSize;
@@ -16,7 +16,7 @@ public class LinkedQueue implements IntQueue {
     @Override
     public void add(int input) {
         int currentSize = getSize();
-        if(currentSize == capacity){
+        if (currentSize == capacity) {
             throw new IllegalStateException();
         }
 
@@ -45,9 +45,10 @@ public class LinkedQueue implements IntQueue {
             return null;
 
         int value = front.getKey();
-        this.front.getNext().setPrev(null);
         this.front = front.getNext();
-
+        if (this.front != null) {
+            this.front.setPrev(null);
+        }
         return value;
     }
 
@@ -55,7 +56,7 @@ public class LinkedQueue implements IntQueue {
     public Integer element() {
 
         if (this.front == null) {
-            throw new NullPointerException();
+            return null;
         }
 
         return this.front.getKey();
@@ -63,7 +64,9 @@ public class LinkedQueue implements IntQueue {
 
     @Override
     public int getSize() {
-        if (this.front == null) { return 0; }
+        if (this.front == null) {
+            return 0;
+        }
 
         QNode iterator = this.front;
         int counter = 1;
