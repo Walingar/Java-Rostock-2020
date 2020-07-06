@@ -10,17 +10,7 @@ import java.nio.charset.StandardCharsets;
 public class FileEncodingWriterImpl implements FileEncodingWriter {
     @Override
     public void write(File file, InputStream data, Charset dataEncoding) {
-        try {
-            file.getParentFile().mkdirs();
-            file.createNewFile();
-            Reader reader = new InputStreamReader(data, dataEncoding);
-            OutputStream outputStream = new FileOutputStream(file);
-            Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
-            reader.transferTo(writer);
-            writer.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        write(file,data, dataEncoding, StandardCharsets.UTF_8);
     }
 
     @Override
