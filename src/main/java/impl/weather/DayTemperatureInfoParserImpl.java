@@ -10,33 +10,40 @@ public class DayTemperatureInfoParserImpl implements DayTemperatureInfoParser {
     public DayTemperatureInfo parse(String expression) {
 
         int stringLength = expression.length();
-        String parsedDay = "";
-        String parsedMonth = "";
-        String parsedTemperature = "";
+        StringBuilder parsedDayBuilder = new StringBuilder();
+        StringBuilder parsedMonthBuilder = new StringBuilder();
+        StringBuilder parsedTemperatureBuilder = new StringBuilder();
         int separatorCount = 0;
-        Boolean negativeTemperature = false;
+        boolean negativeTemperature = false;
 
         for (int stringIndex = 0; stringIndex < stringLength; stringIndex++) {
             char currentElement = expression.charAt(stringIndex);
             if (Character.isWhitespace(currentElement) || currentElement == '.') {
                 separatorCount++;
             } else {
-                if (separatorCount == 0) parsedDay += currentElement;
-                if (separatorCount == 1) parsedMonth += currentElement;
+                if (separatorCount == 0) {
+                    parsedDayBuilder.append(currentElement);
+                }
+                if (separatorCount == 1) {
+                    parsedMonthBuilder.append(currentElement);
+                }
                 if (separatorCount == 2) {
-                    if (currentElement == '-') negativeTemperature = true;
-                    else parsedTemperature += currentElement;
+                    if (currentElement == '-') {
+                        negativeTemperature = true;
+                    } else parsedTemperatureBuilder.append(currentElement);
                 }
             }
         }
-
-        int parsedDayInt = Integer.parseInt(parsedDay);
-        int parsedMonthInt = Integer.parseInt(parsedMonth);
-        Month month = Month.of(parsedMonthInt);
-        int parsedTemperatureInt = Integer.parseInt(parsedTemperature);
+        String parsedDayString = parsedDayBuilder.toString();
+        String parsedMonthString = parsedMonthBuilder.toString();
+        String parsedTemperatureString = parsedTemperatureBuilder.toString();
+        int parsedDay = Integer.parseInt(parsedDayString);
+        int parsedMonth = Integer.parseInt(parsedMonthString);
+        Month month = Month.of(parsedMonth);
+        int parsedTemperature = Integer.parseInt(parsedTemperatureString);
         if (negativeTemperature) {
-            parsedTemperatureInt *= -1;
+            parsedTemperature *= -1;
         }
-        return new DayTemperatureInfoImpl(parsedDayInt, month, parsedTemperatureInt);
+        return new DayTemperatureInfoImpl(parsedDay, month, parsedTemperature);
     }
 }
