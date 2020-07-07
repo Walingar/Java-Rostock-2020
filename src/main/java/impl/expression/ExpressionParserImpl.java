@@ -13,65 +13,56 @@ public class ExpressionParserImpl implements ExpressionParser {
 
         int result = 0;
         int stringLength = expression.length();
-        String parsedInteger = "";
-        String parsedOperator = "";
-        int firstRelevantCharacter = 0;
+        StringBuilder parsedIntegerBuilder = new StringBuilder();
+        boolean isNegative = false;
 
         for (int stringIndex = 0; stringIndex < stringLength; stringIndex++) {
-
             char currentElement = expression.charAt(stringIndex);
-
-            if (!Character.isWhitespace(currentElement) || stringIndex == stringLength - 1) {
-
-                if (Character.isLetter(currentElement)) {
-                    throw new ParseException("Expression consists of letters.");
-                }
-
+            if (!Character.isWhitespace(currentElement)) {
                 if (Character.isDigit(currentElement)) {
-                    parsedInteger += currentElement;
+                    parsedIntegerBuilder.append(currentElement);
+                } else if (currentElement == '-' || (currentElement == '+')) {
+                    result = calculateResult(parsedIntegerBuilder, isNegative, result);
+                    parsedIntegerBuilder.setLength(0);
+                    isNegative = currentElement == '-';
+                } else {
+                    throw new ParseException("Faced unexpected char");
                 }
-
-                if (!Character.isDigit(currentElement) || stringIndex == stringLength - 1) {
-                    if (stringIndex == firstRelevantCharacter && currentElement == '-') {
-                        parsedOperator = "" + currentElement;
-                    } else {
-                        long checkIntOrLong = Long.parseLong(parsedInteger);
-
-                        if (checkIntOrLong > Integer.MAX_VALUE || checkIntOrLong < Integer.MIN_VALUE) {
-                            throw new ParseException("Expression contains too high numbers for int.");
-                        }
-                        int parsedInt = Integer.parseInt(parsedInteger);
-
-                        if (parsedOperator.equals("")) {
-                            result = parsedInt;
-                        } else {
-
-                            if (parsedOperator.equals("+")) {
-                                long checkIntRange = result + parsedInt;
-
-                                if (checkIntRange >= Integer.MAX_VALUE || checkIntRange <= Integer.MIN_VALUE) {
-                                    throw new ArithmeticException("Int value out of range after calculating.");
-                                } else {
-                                    result += parsedInt;
-                                }
-                            } else {
-                                long rangeTestInt = result - parsedInt;
-
-                                if (rangeTestInt <= Integer.MIN_VALUE) {
-                                    throw new ArithmeticException("Int value out of range after calculating.");
-                                } else {
-                                    result -= parsedInt;
-                                }
-                            }
-                        }
-                        parsedInteger = "";
-                        parsedOperator = "" + currentElement;
-                    }
-                }
-            } else {
-                firstRelevantCharacter += 1;
             }
         }
-        return result;
+        return calculateResult(parsedIntegerBuilder, isNegative, result);
+    }
+
+    private int calculateResult(StringBuilder parsedIntegerBuilder, boolean isNegative, int resultOld) throws ParseException{
+        try {
+            String parsedIntegerString = parsedIntegerBuilder.toString();
+            int parsedInteger = 0;
+            if (!parsedIntegerString.isEmpty()) {
+                parsedInteger = Integer.parseInt(parsedIntegerString);
+            }
+            if (isNegative) {
+                return safeSubtract(resultOld, parsedInteger);
+            } else {
+                return safeAdd(resultOld, parsedInteger);
+            }
+        } catch (NumberFormatException numberFormatException) {
+            throw new ParseException("Parsed value out of range for int");
+        }
+    }
+    private int safeAdd(int left, int right) {
+        if (right > 0 ? left > Integer.MAX_VALUE - right
+                : left < Integer.MIN_VALUE - right) {
+            throw new ArithmeticException("Integer overflow");
+        }
+        return left + right;
+    }
+
+    private int safeSubtract(int left, int right) {
+        if (right > 0 ? left < Integer.MIN_VALUE + right
+                : left > Integer.MAX_VALUE + right) {
+            throw new ArithmeticException("Integer overflow");
+        }
+        return left - right;
     }
 }
+
