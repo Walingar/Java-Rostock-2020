@@ -13,6 +13,7 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         int kernelRadiusRow = kernelSizeRow / 2;
         int kernelSizeColumn = kernel[0].length;
         int kernelRadiusColumn = kernelSizeColumn / 2;
+
         int imageSizeRow = image.length;
         int imageSizeColumn = image[0].length;
         Color[][] output = new Color[imageSizeRow][imageSizeColumn];
@@ -33,16 +34,14 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
                         // if core in image range ... else do nothing, as * with 0 is always 0
                         int imageRowCorrection = imageRow + rowNavigator;
                         int imageColumnCorrection = imageColumn + columnNavigator;
-                        if ((imageRowCorrection > -1) && (imageRowCorrection < output.length) && (imageColumnCorrection > -1) && (imageColumnCorrection < output[imageRow].length)) {
-                            int redTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getRed();
-                            int greenTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getGreen();
-                            int blueTemp = image[imageRow + rowNavigator][imageColumn + columnNavigator].getBlue();
-                            redTemp = (int)(redTemp * kernel[kernelRow][kernelColumn]);
-                            greenTemp = (int)(greenTemp * kernel[kernelRow][kernelColumn]);
-                            blueTemp = (int)(blueTemp * kernel[kernelRow][kernelColumn]);
-                            redNew += redTemp;
-                            greenNew += greenTemp;
-                            blueNew += blueTemp;
+                        if (isInRange(imageRowCorrection, imageSizeRow, imageColumnCorrection, imageSizeColumn)) {
+                            Color pixel = image[imageRowCorrection][imageColumnCorrection];
+                            int redTemp = pixel.getRed();
+                            int greenTemp = pixel.getGreen();
+                            int blueTemp = pixel.getBlue();
+                            redNew += (int)(redTemp * kernel[kernelRow][kernelColumn]);
+                            greenNew += (int)(greenTemp * kernel[kernelRow][kernelColumn]);
+                            blueNew += (int)(blueTemp * kernel[kernelRow][kernelColumn]);
                         }
                     }
                 }
@@ -50,5 +49,9 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
             }
         }
         return output;
+    }
+
+    private boolean isInRange(int imageRowCorrection, int imageSizeRow, int imageColumnCorrection, int imageSizeColumn){
+        return (imageRowCorrection > -1) && (imageRowCorrection < imageSizeRow) && (imageColumnCorrection > -1) && (imageColumnCorrection < imageSizeColumn);
     }
 }
