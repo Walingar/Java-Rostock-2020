@@ -34,13 +34,10 @@ public class DayTemperatureInfoParserImpl implements DayTemperatureInfoParser {
                 }
             }
         }
-        String parsedDayString = parsedDayBuilder.toString();
-        String parsedMonthString = parsedMonthBuilder.toString();
-        String parsedTemperatureString = parsedTemperatureBuilder.toString();
-        int parsedDay = Integer.parseInt(parsedDayString);
-        int parsedMonth = Integer.parseInt(parsedMonthString);
+        int parsedDay = Integer.parseInt(parsedDayBuilder.toString());
+        int parsedMonth = Integer.parseInt(parsedMonthBuilder.toString());
         Month month = Month.of(parsedMonth);
-        int parsedTemperature = Integer.parseInt(parsedTemperatureString);
+        int parsedTemperature = Integer.parseInt(parsedTemperatureBuilder.toString());
         if (negativeTemperature) {
             parsedTemperature *= -1;
         }
