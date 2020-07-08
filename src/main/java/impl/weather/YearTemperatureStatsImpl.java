@@ -7,7 +7,7 @@ import java.time.Month;
 import java.util.*;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
-    private Map<Month, Map<Integer, DayTemperatureInfo>> yearTemperatures;
+    private final Map<Month, Map<Integer, DayTemperatureInfo>> yearTemperatures;
     private int monthCapacity;
 
     public YearTemperatureStatsImpl(){
@@ -17,7 +17,6 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         }
         yearTemperatures = new HashMap<>(monthCapacity);
     }
-
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
