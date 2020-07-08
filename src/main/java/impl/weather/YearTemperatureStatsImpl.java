@@ -83,15 +83,17 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
                     DayTemperatureInfo previousDay = output.get(previousDayIndex);
                     int previousTemperature = previousDay.getTemperature();
                     int currentTemperature = eachDay.getTemperature();
-                    if (previousTemperature < currentTemperature) output.add(eachDay);
-                    else {
+                    if (previousTemperature < currentTemperature) {
+                        output.add(eachDay);
+                    } else {
                         while (previousTemperature > currentTemperature && previousDayIndex > 0) {
                             previousDayIndex--;
                             previousDay = output.get(previousDayIndex);
                             previousTemperature = previousDay.getTemperature();
                         }
-                        if (previousDayIndex != 0 || previousTemperature < currentTemperature) output.add(previousDayIndex + 1, eachDay);
-                        else output.add(previousDayIndex, eachDay);
+                        if (previousDayIndex != 0 || previousTemperature < currentTemperature) {
+                            output.add(previousDayIndex + 1, eachDay);
+                        } else output.add(previousDayIndex, eachDay);
                     }
                 }
                 dayCount++;
