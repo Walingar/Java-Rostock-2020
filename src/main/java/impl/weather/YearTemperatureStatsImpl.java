@@ -93,7 +93,9 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
                         }
                         if (previousDayIndex != 0 || previousTemperature < currentTemperature) {
                             output.add(previousDayIndex + 1, eachDay);
-                        } else output.add(previousDayIndex, eachDay);
+                        } else {
+                            output.add(previousDayIndex, eachDay);
+                        }
                     }
                 }
                 dayCount++;
