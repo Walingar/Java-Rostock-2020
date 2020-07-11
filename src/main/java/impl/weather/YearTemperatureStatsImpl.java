@@ -12,12 +12,16 @@ import static java.time.Month.*;
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
     private Map<Month, Map<Integer, DayTemperatureInfoImpl>> weatherMap;
 
+    public YearTemperatureStatsImpl(){
+        weatherMap = new HashMap<>();
+    }
+
     @Override
     public void updateStats(DayTemperatureInfoImpl info) {
         int day = info.getDay();
         Month month = info.getMonth();
 
-        if (weatherMap.containsKey(month)) {
+        if (weatherMap.containsKey(month) == true) {
             Map<Integer, DayTemperatureInfoImpl> mapMonth = weatherMap.get(month);
             mapMonth.put(day, info);
             weatherMap.put(month, mapMonth);
@@ -32,7 +36,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     public Double getAverageTemperature(Month month) {
         if (weatherMap.containsKey(month) == true) {
             Map<Integer, DayTemperatureInfoImpl> mapMonth = weatherMap.get(month);
-            int days = weatherMap.size();
+            int days = mapMonth.size();
             int sum = 0;
 
             Collection<DayTemperatureInfoImpl> elements = mapMonth.values();

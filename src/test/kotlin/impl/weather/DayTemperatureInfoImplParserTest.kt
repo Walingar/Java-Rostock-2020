@@ -14,7 +14,7 @@ internal class DayTemperatureInfoImplParserTest {
         val parser = DayTemperatureInfoParserFactory.getInstance()
         val stats = YearTemperatureStatsFactory.getInstance()
         lines.forEach { line ->
-            stats.updateStats(parser.parse(line))
+            stats.updateStats(parser.parse(line) as DayTemperatureInfoImpl?)
         }
         return stats
     }
