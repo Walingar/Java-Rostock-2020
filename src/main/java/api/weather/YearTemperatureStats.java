@@ -1,17 +1,19 @@
 package api.weather;
 
+import impl.weather.DayTemperatureInfoImpl;
+
 import java.time.Month;
 import java.util.List;
 import java.util.Map;
 
 public interface YearTemperatureStats {
-    void updateStats(DayTemperatureInfo info);
+    void updateStats(DayTemperatureInfoImpl info);
 
     Double getAverageTemperature(Month month);
 
     Map<Month, Integer> getMaxTemperature();
 
-    List<DayTemperatureInfo> getSortedTemperature(Month month);
+    List<DayTemperatureInfoImpl> getSortedTemperature(Month month);
 
-    DayTemperatureInfo getTemperature(int day, Month month);
+    DayTemperatureInfoImpl getTemperature(int day, Month month);
 }

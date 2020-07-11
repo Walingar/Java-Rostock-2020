@@ -6,7 +6,7 @@ import org.junit.Test
 import java.io.File
 import java.time.Month
 
-internal class DayTemperatureInfoParserTest {
+internal class DayTemperatureInfoImplParserTest {
     private fun readRawDataFromFile(fileName: String = "data/temperature.txt") =
         File(fileName).readLines(Charsets.UTF_8).map { it.trim() }
 

@@ -7,7 +7,7 @@ import junit.framework.TestCase.assertNull
 import org.junit.Test
 import java.time.Month
 
-internal class YearTemperatureStatsTest {
+internal class YearTemperatureStatsImplTest {
     private fun updateStats(
         info: Collection<DayTemperatureInfo>,
         stats: YearTemperatureStats = YearTemperatureStatsFactory.getInstance()
