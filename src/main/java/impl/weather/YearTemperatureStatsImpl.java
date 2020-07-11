@@ -4,10 +4,7 @@ import api.weather.DayTemperatureInfo;
 import api.weather.YearTemperatureStats;
 
 import java.time.Month;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 import static java.time.Month.*;
@@ -72,9 +69,10 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         if (weatherMap.containsKey(month) == true) {
             Map<Integer,DayTemperatureInfoImpl> mapMonth = weatherMap.get(month);
             Collection<DayTemperatureInfoImpl> days = mapMonth.values();
-            Collection<Integer> temperature =
+            List<DayTemperatureInfoImpl> output = new ArrayList<>(days);
+            Collections.sort(output);
+            return output;
         }
-
         return null;
     }
 
@@ -93,4 +91,6 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         }
         return null;
     }
+    
+    
 }
