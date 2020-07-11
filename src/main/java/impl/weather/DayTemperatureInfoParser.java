@@ -15,27 +15,27 @@ public class DayTemperatureInfoParser implements api.weather.DayTemperatureInfoP
         StringBuilder monthString = new StringBuilder();
         StringBuilder temperatureString = new StringBuilder();
 
-        for(int stringIterator = 0; stringIterator < stringLength; stringIterator++){
+        for (int stringIterator = 0; stringIterator < stringLength; stringIterator++) {
             char currentElement = rawData.charAt(stringIterator);
 
-            if(Character.isWhitespace(currentElement) || currentElement == '.' || currentElement =='-'){
+            if (Character.isWhitespace(currentElement) || currentElement == '.') {
                 nonLetterCounter++;
 
-            } else{
-                if(nonLetterCounter == 0){
+            } else {
+                if (nonLetterCounter == 0) {
                     dayString.append(currentElement);
                 }
-                if(nonLetterCounter == 1){
+                if (nonLetterCounter == 1) {
                     monthString.append(currentElement);
                 }
-                if(nonLetterCounter == 2){
-                    temperatureString.append(currentElement);
-                }
-                if (nonLetterCounter == 3)
-                    negativeTemperature = true;
-                    temperatureString.append(currentElement);
+                if (nonLetterCounter == 2) {
+                    if (currentElement == '-') {
+                        negativeTemperature = true;
+                    } else temperatureString.append(currentElement);
                 }
             }
+
+        }
 
         // DAY
         int day = Integer.parseInt(dayString.toString());
@@ -46,8 +46,8 @@ public class DayTemperatureInfoParser implements api.weather.DayTemperatureInfoP
 
         //TEMPERATURE
         int temperature = Integer.parseInt(temperatureString.toString());
-        if(negativeTemperature) temperature = temperature * (-1);
+        if (negativeTemperature) temperature = temperature * (-1);
 
-        return new DayTemperatureInfoImpl(day,month,temperature);
+        return new DayTemperatureInfoImpl(day, month, temperature);
     }
 }
