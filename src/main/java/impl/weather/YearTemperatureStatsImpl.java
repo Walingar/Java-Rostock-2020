@@ -21,6 +21,10 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
             Map<Integer, DayTemperatureInfoImpl> mapMonth = weatherMap.get(month);
             mapMonth.put(day, info);
             weatherMap.put(month, mapMonth);
+        } else {
+            Map<Integer, DayTemperatureInfoImpl> newMonth = new HashMap<>(month.length(false));
+            newMonth.put(day, info);
+            weatherMap.put(month, newMonth);
         }
     }
 
@@ -45,16 +49,16 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         Collection<Map<Integer, DayTemperatureInfoImpl>> months = weatherMap.values();
         Map<Month, Integer> output = new HashMap<>();
 
-        for(Map<Integer,DayTemperatureInfoImpl> month : months){
+        for (Map<Integer, DayTemperatureInfoImpl> month : months) {
             Collection<DayTemperatureInfoImpl> days = month.values();
             Integer monthMaxTemperature = null;
             Month currentMonth = null;
 
-            for(DayTemperatureInfoImpl day : days){
+            for (DayTemperatureInfoImpl day : days) {
                 int dayTemperature = day.getTemperature();
                 currentMonth = day.getMonth();
 
-                if(monthMaxTemperature == null || monthMaxTemperature < dayTemperature){
+                if (monthMaxTemperature == null || monthMaxTemperature < dayTemperature) {
                     monthMaxTemperature = dayTemperature;
                 }
             }
@@ -67,7 +71,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     @Override
     public List<DayTemperatureInfoImpl> getSortedTemperature(Month month) {
         if (weatherMap.containsKey(month) == true) {
-            Map<Integer,DayTemperatureInfoImpl> mapMonth = weatherMap.get(month);
+            Map<Integer, DayTemperatureInfoImpl> mapMonth = weatherMap.get(month);
             Collection<DayTemperatureInfoImpl> days = mapMonth.values();
             List<DayTemperatureInfoImpl> output = new ArrayList<>(days);
             Collections.sort(output);
@@ -91,6 +95,6 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         }
         return null;
     }
-    
-    
+
+
 }
