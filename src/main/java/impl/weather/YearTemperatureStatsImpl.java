@@ -74,6 +74,8 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public List<DayTemperatureInfoImpl> getSortedTemperature(Month month) {
+        List<DayTemperatureInfoImpl> emptyList= new ArrayList<DayTemperatureInfoImpl>();
+
         if (weatherMap.containsKey(month) == true) {
             Map<Integer, DayTemperatureInfoImpl> mapMonth = weatherMap.get(month);
             Collection<DayTemperatureInfoImpl> days = mapMonth.values();
@@ -81,7 +83,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
             Collections.sort(output);
             return output;
         }
-        return null;
+        return emptyList;
     }
 
     @Override
