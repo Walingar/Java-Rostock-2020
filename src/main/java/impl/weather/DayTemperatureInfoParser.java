@@ -18,23 +18,25 @@ public class DayTemperatureInfoParser implements api.weather.DayTemperatureInfoP
         for(int stringIterator = 0; stringIterator < stringLength; stringIterator++){
             char currentElement = rawData.charAt(stringIterator);
 
-            if(Character.isWhitespace(currentElement) || currentElement == '.' || currentElement == '-'){
+            if(Character.isWhitespace(currentElement) || currentElement == '.' || currentElement =='-'){
                 nonLetterCounter++;
 
             } else{
-                switch (nonLetterCounter){
-                    case 0:
-                        dayString.append(currentElement);
-                    case 1:
-                        monthString.append(currentElement);
-                    case 2:
-                        temperatureString.append(currentElement);
-                    case 3:
-                        negativeTemperature = true;
-                        temperatureString.append(currentElement);
+                if(nonLetterCounter == 0){
+                    dayString.append(currentElement);
+                }
+                if(nonLetterCounter == 1){
+                    monthString.append(currentElement);
+                }
+                if(nonLetterCounter == 2){
+                    temperatureString.append(currentElement);
+                }
+                if (nonLetterCounter == 3)
+                    negativeTemperature = true;
+                    temperatureString.append(currentElement);
                 }
             }
-        }
+
         // DAY
         int day = Integer.parseInt(dayString.toString());
 
