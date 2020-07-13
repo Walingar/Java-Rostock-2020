@@ -34,11 +34,14 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
                         // if core in image range ... else do nothing, as * with 0 is always 0
                         int imageRowCorrection = imageRow + rowNavigator;
                         int imageColumnCorrection = imageColumn + columnNavigator;
+
+
                         if (isInRange(imageRowCorrection, imageSizeRow, imageColumnCorrection, imageSizeColumn)) {
                             Color pixel = image[imageRowCorrection][imageColumnCorrection];
-                            redNew += (int) (pixel.getRed() * kernel[kernelRow][kernelColumn]);
-                            greenNew += (int) (pixel.getGreen() * kernel[kernelRow][kernelColumn]);
-                            blueNew += (int) (pixel.getBlue() * kernel[kernelRow][kernelColumn]);
+                            double kernelPixel = kernel[kernelRow][kernelColumn];
+                            redNew += (int) (pixel.getRed() * kernelPixel);
+                            greenNew += (int) (pixel.getGreen() * kernelPixel);
+                            blueNew += (int) (pixel.getBlue() * kernelPixel);
                         }
                     }
                 }
