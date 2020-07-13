@@ -10,7 +10,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     private final Map<Month, Map<Integer, DayTemperatureInfo>> yearTemperatures;
     private final Map<Month, Integer> maxTemperatures;
 
-    public YearTemperatureStatsImpl(){
+    public YearTemperatureStatsImpl() {
         yearTemperatures = new EnumMap<>(Month.class);
         maxTemperatures = new EnumMap<>(Month.class);
     }
@@ -59,36 +59,9 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         if (yearTemperatures.containsKey(month)) {
             Map<Integer, DayTemperatureInfo> dayTemperatures = yearTemperatures.get(month);
             Collection<DayTemperatureInfo> knownDays = dayTemperatures.values();
-            List<DayTemperatureInfo> output = new ArrayList<>(knownDays.size());
-            // output.addAll(knownDays);
-            int dayCount = 0;
-            for (DayTemperatureInfo eachDay : knownDays) {
-                if (dayCount == 0) {
-                    output.add(eachDay);
-                } else {
-                    int previousDayIndex = dayCount - 1;
-                    DayTemperatureInfo previousDay = output.get(previousDayIndex);
-                    int previousTemperature = previousDay.getTemperature();
-                    int currentTemperature = eachDay.getTemperature();
-                    if (previousTemperature < currentTemperature) {
-                        output.add(eachDay);
-                    } else {
-                        while (previousTemperature > currentTemperature && previousDayIndex > 0) {
-                            previousDayIndex--;
-                            previousDay = output.get(previousDayIndex);
-                            previousTemperature = previousDay.getTemperature();
-                        }
-                        if (previousDayIndex != 0 || previousTemperature < currentTemperature) {
-                            output.add(previousDayIndex + 1, eachDay);
-                        } else {
-                            output.add(previousDayIndex, eachDay);
-                        }
-                    }
-                }
-                 dayCount++;
-            }
-            // output.sort(Comparator.comparing(DayTemperatureInfo::getTemperature));
-            return output;
+            ArrayList<DayTemperatureInfo> output = new ArrayList<>(knownDays.size());
+            output.addAll(knownDays);
+            return mergeSort(output);
         }
         return new ArrayList<>();
     }
@@ -104,4 +77,53 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         return null;
     }
 
+    public ArrayList<DayTemperatureInfo> mergeSort(ArrayList<DayTemperatureInfo> whole) {
+        ArrayList<DayTemperatureInfo> left = new ArrayList<>();
+        ArrayList<DayTemperatureInfo> right = new ArrayList<>();
+        int center;
+        if (whole.size() == 1) {
+            return whole;
+        } else {
+            center = whole.size() / 2;
+            for (int index = 0; index < center; index++) {
+                left.add(whole.get(index));
+            }
+            for (int index = center; index < whole.size(); index++) {
+                right.add(whole.get(index));
+            }
+            left = mergeSort(left);
+            right = mergeSort(right);
+            merge(left, right, whole);
+        }
+        return whole;
+    }
+
+    private void merge(ArrayList<DayTemperatureInfo> left, ArrayList<DayTemperatureInfo> right, ArrayList<DayTemperatureInfo> whole) {
+        int leftIndex = 0;
+        int rightIndex = 0;
+        int wholeIndex = 0;
+        while (leftIndex < left.size() && rightIndex < right.size()) {
+            if (left.get(leftIndex).getTemperature() < right.get(rightIndex).getTemperature()) {
+                whole.set(wholeIndex, left.get(leftIndex));
+                leftIndex++;
+            } else {
+                whole.set(wholeIndex, right.get(rightIndex));
+                rightIndex++;
+            }
+            wholeIndex++;
+        }
+        ArrayList<DayTemperatureInfo> rest;
+        int restIndex;
+        if (leftIndex >= left.size()) {
+            rest = right;
+            restIndex = rightIndex;
+        } else {
+            rest = left;
+            restIndex = leftIndex;
+        }
+        for (int i = restIndex; i < rest.size(); i++) {
+            whole.set(wholeIndex, rest.get(i));
+            wholeIndex++;
+        }
+    }
 }
