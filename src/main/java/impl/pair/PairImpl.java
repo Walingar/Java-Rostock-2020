@@ -35,8 +35,8 @@ public class PairImpl<T, K> implements Pair<T, K> {
         if (!(obj instanceof PairImpl)) {
             return false;
         }
-        PairImpl pairImpl = (PairImpl) obj;
-        return pairImpl.getFirst().equals(firstValue) && pairImpl.getSecond().equals(secondValue);
+        PairImpl comparable = (PairImpl) obj;
+        return comparable.getFirst().equals(firstValue) && comparable.getSecond().equals(secondValue);
     }
 
     @Override

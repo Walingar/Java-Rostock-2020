@@ -37,8 +37,8 @@ public class NumberPairImpl<T extends Number, K extends Number> implements Numbe
         if (!(obj instanceof NumberPairImpl)) {
             return false;
         }
-        NumberPairImpl numberPairImpl = (NumberPairImpl) obj;
-        return numberPairImpl.getFirst().equals(firstValue) && numberPairImpl.getSecond().equals(secondValue);
+        NumberPairImpl comparable = (NumberPairImpl) obj;
+        return comparable.getFirst().equals(firstValue) && comparable.getSecond().equals(secondValue);
     }
 
     @Override
