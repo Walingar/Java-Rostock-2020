@@ -8,72 +8,59 @@ import java.util.*;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
     private final Map<Month, Map<Integer, DayTemperatureInfo>> yearTemperatures;
-    private int monthCapacity;
+    private final Map<Month, Integer> maxTemperatures;
 
     public YearTemperatureStatsImpl(){
-        monthCapacity = 0;
-        for (Month ignored : Month.values()) {
-            monthCapacity++;
-        }
-        yearTemperatures = new HashMap<>(monthCapacity);
+        yearTemperatures = new EnumMap<>(Month.class);
+        maxTemperatures = new EnumMap<>(Month.class);
     }
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
         Month month = info.getMonth();
         Integer day = info.getDay();
+        Integer temperature = info.getTemperature();
         if (yearTemperatures.containsKey(month)) {
             Map<Integer, DayTemperatureInfo> dayTemperatures = yearTemperatures.get(month);
             dayTemperatures.put(day, info);
+            if (maxTemperatures.get(month) < temperature) {
+                maxTemperatures.put(month, temperature);
+            }
         } else {
             Map<Integer, DayTemperatureInfo> dayTemperatures = new HashMap<>(month.length(false));
             dayTemperatures.put(day, info);
             yearTemperatures.put(month, dayTemperatures);
+            maxTemperatures.put(month, temperature);
         }
     }
 
     @Override
     public Double getAverageTemperature(Month month) {
-        if (yearTemperatures.containsKey(month)) {
-            Map<Integer, DayTemperatureInfo> dayTemperatures = yearTemperatures.get(month);
-            Collection<DayTemperatureInfo> knownDays = dayTemperatures.values();
-            double sum = 0;
-            int knownDaysCount = knownDays.size();
-            for (DayTemperatureInfo day : knownDays) {
-                sum += day.getTemperature();
-            }
-            return sum / knownDaysCount;
-        } else {
+        if (!yearTemperatures.containsKey(month)) {
             return null;
         }
+        Map<Integer, DayTemperatureInfo> dayTemperatures = yearTemperatures.get(month);
+        Collection<DayTemperatureInfo> knownDays = dayTemperatures.values();
+        double sum = 0;
+        int knownDaysCount = knownDays.size();
+        for (DayTemperatureInfo day : knownDays) {
+            sum += day.getTemperature();
+        }
+        return sum / knownDaysCount;
     }
 
     @Override
     public Map<Month, Integer> getMaxTemperature() {
-        Collection<Map<Integer, DayTemperatureInfo>> knownMonths = yearTemperatures.values();
-        Map<Month, Integer> output = new HashMap<>(monthCapacity);
-        for (Map<Integer, DayTemperatureInfo> eachMonth : knownMonths) {
-            Collection<DayTemperatureInfo> knownDays = eachMonth.values();
-            Integer eachMax = null;
-            Month currentMonth = null;
-            for (DayTemperatureInfo eachDay : knownDays) {
-                int dayTemperature = eachDay.getTemperature();
-                if (eachMax == null || eachMax < dayTemperature) {
-                    eachMax = dayTemperature;
-                    currentMonth = eachDay.getMonth();
-                }
-            }
-            output.put(currentMonth, eachMax);
-        }
-        return output;
+        return maxTemperatures;
     }
 
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
-        List<DayTemperatureInfo> output = new ArrayList<>(month.length(false));
         if (yearTemperatures.containsKey(month)) {
             Map<Integer, DayTemperatureInfo> dayTemperatures = yearTemperatures.get(month);
             Collection<DayTemperatureInfo> knownDays = dayTemperatures.values();
+            List<DayTemperatureInfo> output = new ArrayList<>(knownDays.size());
+            // output.addAll(knownDays);
             int dayCount = 0;
             for (DayTemperatureInfo eachDay : knownDays) {
                 if (dayCount == 0) {
@@ -98,10 +85,12 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
                         }
                     }
                 }
-                dayCount++;
+                 dayCount++;
             }
+            // output.sort(Comparator.comparing(DayTemperatureInfo::getTemperature));
+            return output;
         }
-        return output;
+        return new ArrayList<>();
     }
 
     @Override
@@ -114,4 +103,5 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         }
         return null;
     }
+
 }
