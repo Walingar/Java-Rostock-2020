@@ -40,7 +40,7 @@ public class ExpressionParserImpl implements ExpressionParser {
             if (isNegative) {
                 parsedInteger *= -1;
             }
-            return Integer.sum(result, parsedInteger);
+            return Math.addExact(result, parsedInteger);
         } catch (NumberFormatException numberFormatException) {
             throw new ParseException("Parsed value out of range for int");
         }
