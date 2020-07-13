@@ -22,8 +22,6 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
             Writer writer = new OutputStreamWriter(bufferedOutputStream, fileEncoding);
             reader.transferTo(writer);
             writer.close();
-            reader.close();
-            writer.flush();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
