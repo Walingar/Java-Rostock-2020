@@ -16,15 +16,16 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     @Override
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
         try {
-            file.getParentFile().mkdirs();
-            file.createNewFile();
             Reader reader = new InputStreamReader(data, dataEncoding);
             OutputStream outputStream = new FileOutputStream(file);
-            Writer writer = new OutputStreamWriter(outputStream, fileEncoding);
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+            Writer writer = new OutputStreamWriter(bufferedOutputStream, fileEncoding);
             reader.transferTo(writer);
+            writer.close();
+            reader.close();
             writer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }
