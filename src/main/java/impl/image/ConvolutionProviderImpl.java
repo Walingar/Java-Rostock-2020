@@ -36,12 +36,9 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
                         int imageColumnCorrection = imageColumn + columnNavigator;
                         if (isInRange(imageRowCorrection, imageSizeRow, imageColumnCorrection, imageSizeColumn)) {
                             Color pixel = image[imageRowCorrection][imageColumnCorrection];
-                            int redTemp = pixel.getRed();
-                            int greenTemp = pixel.getGreen();
-                            int blueTemp = pixel.getBlue();
-                            redNew += (int)(redTemp * kernel[kernelRow][kernelColumn]);
-                            greenNew += (int)(greenTemp * kernel[kernelRow][kernelColumn]);
-                            blueNew += (int)(blueTemp * kernel[kernelRow][kernelColumn]);
+                            redNew += (int) (pixel.getRed() * kernel[kernelRow][kernelColumn]);
+                            greenNew += (int) (pixel.getGreen() * kernel[kernelRow][kernelColumn]);
+                            blueNew += (int) (pixel.getBlue() * kernel[kernelRow][kernelColumn]);
                         }
                     }
                 }
@@ -51,7 +48,7 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         return output;
     }
 
-    private boolean isInRange(int imageRowCorrection, int imageSizeRow, int imageColumnCorrection, int imageSizeColumn){
+    private boolean isInRange(int imageRowCorrection, int imageSizeRow, int imageColumnCorrection, int imageSizeColumn) {
         return (imageRowCorrection > -1) && (imageRowCorrection < imageSizeRow) && (imageColumnCorrection > -1) && (imageColumnCorrection < imageSizeColumn);
     }
 }
