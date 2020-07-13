@@ -12,19 +12,19 @@ public class ExpressionParserImpl implements ExpressionParser {
         }
 
         int result = 0;
-        int stringLength = expression.length();
         StringBuilder parsedIntegerBuilder = new StringBuilder();
         boolean isNegative = false;
 
-        for (int stringIndex = 0; stringIndex < stringLength; stringIndex++) {
-            char currentElement = expression.charAt(stringIndex);
-            if (!Character.isWhitespace(currentElement)) {
-                if (Character.isDigit(currentElement)) {
-                    parsedIntegerBuilder.append(currentElement);
-                } else if (currentElement == '-' || (currentElement == '+')) {
-                    result = calculateResult(parsedIntegerBuilder, isNegative, result);
-                    parsedIntegerBuilder.setLength(0);
-                    isNegative = currentElement == '-';
+        for (char currentChar : expression.toCharArray()) {
+            if (!Character.isWhitespace(currentChar)) {
+                if (Character.isDigit(currentChar)) {
+                    parsedIntegerBuilder.append(currentChar);
+                } else if (currentChar == '-' || currentChar == '+') {
+                    if (parsedIntegerBuilder.length() != 0) {
+                        result = calculateResult(parsedIntegerBuilder, isNegative, result);
+                        parsedIntegerBuilder.setLength(0);
+                    }
+                    isNegative = currentChar == '-';
                 } else {
                     throw new ParseException("Faced unexpected char");
                 }
@@ -33,36 +33,17 @@ public class ExpressionParserImpl implements ExpressionParser {
         return calculateResult(parsedIntegerBuilder, isNegative, result);
     }
 
-    private int calculateResult(StringBuilder parsedIntegerBuilder, boolean isNegative, int resultOld) throws ParseException{
+    private int calculateResult(StringBuilder parsedIntegerBuilder, boolean isNegative, int result) throws ParseException {
         try {
             String parsedIntegerString = parsedIntegerBuilder.toString();
-            int parsedInteger = 0;
-            if (!parsedIntegerString.isEmpty()) {
-                parsedInteger = Integer.parseInt(parsedIntegerString);
-            }
+            int parsedInteger = Integer.parseInt(parsedIntegerString);
             if (isNegative) {
-                return safeSubtract(resultOld, parsedInteger);
-            } else {
-                return safeAdd(resultOld, parsedInteger);
+                parsedInteger *= -1;
             }
+            return Integer.sum(result, parsedInteger);
         } catch (NumberFormatException numberFormatException) {
             throw new ParseException("Parsed value out of range for int");
         }
-    }
-    private int safeAdd(int left, int right) {
-        if (right > 0 ? left > Integer.MAX_VALUE - right
-                : left < Integer.MIN_VALUE - right) {
-            throw new ArithmeticException("Integer overflow");
-        }
-        return left + right;
-    }
-
-    private int safeSubtract(int left, int right) {
-        if (right > 0 ? left < Integer.MIN_VALUE + right
-                : left > Integer.MAX_VALUE + right) {
-            throw new ArithmeticException("Integer overflow");
-        }
-        return left - right;
     }
 }
 
