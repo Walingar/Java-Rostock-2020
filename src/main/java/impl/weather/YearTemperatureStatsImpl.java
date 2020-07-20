@@ -31,7 +31,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
             currentMonthInfo.averageTemperature = (knownDays * currentMonthInfo.averageTemperature + temperature) / (knownDays + 1);
             currentMonthInfo.knownDays++;
         } else {
-            Map<Integer, DayTemperatureInfo> dayTemperatures = new HashMap<>(month.length(false));
+            Map<Integer, DayTemperatureInfo> dayTemperatures = new LinkedHashMap<>(month.length(false));
             dayTemperatures.put(day, info);
             yearTemperatures.put(month, dayTemperatures);
             MonthInfo newMonthInfo = new MonthInfo(month);
@@ -67,7 +67,8 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
             Collection<DayTemperatureInfo> knownDays = dayTemperatures.values();
             ArrayList<DayTemperatureInfo> output = new ArrayList<>(knownDays.size());
             output.addAll(knownDays);
-            return mergeSort(output);
+            output.sort(Comparator.comparingInt(DayTemperatureInfo::getTemperature));
+            return output;
         }
         return new ArrayList<>();
     }
@@ -81,56 +82,6 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
             }
         }
         return null;
-    }
-
-    public ArrayList<DayTemperatureInfo> mergeSort(ArrayList<DayTemperatureInfo> whole) {
-        ArrayList<DayTemperatureInfo> left = new ArrayList<>();
-        ArrayList<DayTemperatureInfo> right = new ArrayList<>();
-        int center;
-        if (whole.size() == 1) {
-            return whole;
-        } else {
-            center = whole.size() / 2;
-            for (int index = 0; index < center; index++) {
-                left.add(whole.get(index));
-            }
-            for (int index = center; index < whole.size(); index++) {
-                right.add(whole.get(index));
-            }
-            left = mergeSort(left);
-            right = mergeSort(right);
-            merge(left, right, whole);
-        }
-        return whole;
-    }
-
-    private void merge(ArrayList<DayTemperatureInfo> left, ArrayList<DayTemperatureInfo> right, ArrayList<DayTemperatureInfo> whole) {
-        int leftIndex = 0;
-        int rightIndex = 0;
-        int wholeIndex = 0;
-        while (leftIndex < left.size() && rightIndex < right.size()) {
-            if (left.get(leftIndex).getTemperature() < right.get(rightIndex).getTemperature()) {
-                whole.set(wholeIndex, left.get(leftIndex));
-                leftIndex++;
-            } else {
-                whole.set(wholeIndex, right.get(rightIndex));
-                rightIndex++;
-            }
-            wholeIndex++;
-        }
-        ArrayList<DayTemperatureInfo> rest;
-        int restIndex;
-        if (leftIndex >= left.size()) {
-            rest = right;
-            restIndex = rightIndex;
-        } else {
-            rest = left;
-            restIndex = leftIndex;
-        }
-        for (int i = restIndex; i < rest.size(); i++) {
-            whole.set(wholeIndex, rest.get(i));
-            wholeIndex++;
-        }
     }
 
     static class MonthInfo {
