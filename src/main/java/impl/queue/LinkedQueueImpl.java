@@ -5,23 +5,23 @@ import api.queue.IntQueue;
 public class LinkedQueueImpl implements IntQueue {
     private final int capacity;
     private LinkedQueueNode head;
-    private int currentSize;
+    private int size;
     private LinkedQueueNode tail;
 
     public LinkedQueueImpl(int maxSize) {
         capacity = maxSize;
-        currentSize = 0;
+        size = 0;
     }
 
     @Override
     public void add(int e) {
-        if (currentSize == capacity) {
+        if (size == capacity) {
             throw new IllegalStateException();
         }
-        if (currentSize == 0) {
+        if (size == 0) {
             head = new LinkedQueueNode(e);
         }
-        else if (currentSize == 1) {
+        else if (size == 1) {
             tail = new LinkedQueueNode(e);
             head.setNext(tail);
             tail.setPrevious(head);
@@ -35,28 +35,28 @@ public class LinkedQueueImpl implements IntQueue {
             tail.setPrevious(oldTail);
             tail.setValue(e);
         }
-        currentSize++;
+        size++;
     }
 
     @Override
     public Integer remove() {
-        if (currentSize == 0) {
+        if (size == 0) {
             return null;
         }
         Integer output = head.getValue();
-        if (currentSize == 1) {
+        if (size == 1) {
             head = null;
         } else {
             head = head.getNext();
             head.setPrevious(null);
         }
-        currentSize--;
+        size--;
         return output;
     }
 
     @Override
     public Integer element() {
-        if (currentSize == 0) {
+        if (size == 0) {
             return null;
         }
         return head.getValue();
@@ -64,10 +64,10 @@ public class LinkedQueueImpl implements IntQueue {
 
     @Override
     public int getSize() {
-        return currentSize;
+        return size;
     }
 
-    class LinkedQueueNode {
+    static class LinkedQueueNode {
         private Integer value;
         private LinkedQueueNode next;
         private LinkedQueueNode previous;
