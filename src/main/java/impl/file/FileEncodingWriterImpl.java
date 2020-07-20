@@ -31,8 +31,8 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     private void execute(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) throws IOException {
         Reader reader = new InputStreamReader(data, dataEncoding);
         OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
-        Writer writer = new OutputStreamWriter(outputStream, fileEncoding);
-        reader.transferTo(writer);
-        writer.close();
+        try (Writer writer = new OutputStreamWriter(outputStream, fileEncoding)) {
+            reader.transferTo(writer);
+        }
     }
 }
