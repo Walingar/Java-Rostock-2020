@@ -16,12 +16,12 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     @Override
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
         try {
-            if (file.exists()) {
-                execute(file, data, dataEncoding, fileEncoding);
-            } else {
+            if (!file.exists()) {
                 if (file.getParentFile().mkdirs() && file.createNewFile()) {
                     execute(file, data, dataEncoding, fileEncoding);
                 }
+            } else {
+                execute(file, data, dataEncoding, fileEncoding);
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
