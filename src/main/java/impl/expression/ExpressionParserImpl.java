@@ -13,7 +13,6 @@ public class ExpressionParserImpl implements ExpressionParser {
 
         int result = 0;
         StringBuilder parsedIntegerBuilder = new StringBuilder();
-        boolean isNegative = false;
 
         for (char currentChar : expression.toCharArray()) {
             if (!Character.isWhitespace(currentChar)) {
@@ -21,25 +20,22 @@ public class ExpressionParserImpl implements ExpressionParser {
                     parsedIntegerBuilder.append(currentChar);
                 } else if (currentChar == '-' || currentChar == '+') {
                     if (parsedIntegerBuilder.length() != 0) {
-                        result = calculateResult(parsedIntegerBuilder, isNegative, result);
+                        result = calculateResult(parsedIntegerBuilder, result);
                         parsedIntegerBuilder.setLength(0);
                     }
-                    isNegative = currentChar == '-';
+                    parsedIntegerBuilder.append(currentChar);
                 } else {
                     throw new ParseException("Faced unexpected char");
                 }
             }
         }
-        return calculateResult(parsedIntegerBuilder, isNegative, result);
+        return calculateResult(parsedIntegerBuilder, result);
     }
 
-    private int calculateResult(StringBuilder parsedIntegerBuilder, boolean isNegative, int result) throws ParseException {
+    private int calculateResult(StringBuilder parsedIntegerBuilder, int result) throws ParseException {
         try {
             String parsedIntegerString = parsedIntegerBuilder.toString();
             int parsedInteger = Integer.parseInt(parsedIntegerString);
-            if (isNegative) {
-                parsedInteger *= -1;
-            }
             return Math.addExact(result, parsedInteger);
         } catch (NumberFormatException numberFormatException) {
             throw new ParseException("Parsed value out of range for int");
