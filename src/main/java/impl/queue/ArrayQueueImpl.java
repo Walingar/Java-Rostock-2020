@@ -2,38 +2,26 @@ package impl.queue;
 
 import api.queue.IntQueue;
 
-public class ArrayQueueImpl implements IntQueue {
-    private final int capacity;
+public class ArrayQueueImpl extends AbstractQueueImpl {
     private final Integer[] queueArray;
-    private int size;
     private int headIndex;
 
     public ArrayQueueImpl(int maxSize) {
-        capacity = maxSize;
+        super(maxSize);
         queueArray = new Integer[capacity];
-        size = 0;
         headIndex = 0;
     }
 
     @Override
-    public void add(int e) {
-        if (size == capacity) {
-            throw new IllegalStateException();
-        } else {
-            int currentIndex = (size + headIndex) % capacity;
-            queueArray[currentIndex] = e;
-            size++;
-        }
+    public void addImpl(int e) {
+        int currentIndex = (size + headIndex) % capacity;
+        queueArray[currentIndex] = e;
     }
 
     @Override
-    public Integer remove() {
-        if (size == 0) {
-            return null;
-        }
+    public Integer removeImpl() {
         Integer output = queueArray[headIndex];
         queueArray[headIndex] = null;
-        size--;
         headIndex++;
         if (headIndex == capacity) {
             headIndex = 0;
@@ -42,15 +30,7 @@ public class ArrayQueueImpl implements IntQueue {
     }
 
     @Override
-    public Integer element() {
-        if (size == 0) {
-            return null;
-        }
+    public Integer elementImpl() {
         return queueArray[headIndex];
-    }
-
-    @Override
-    public int getSize() {
-        return size;
     }
 }
