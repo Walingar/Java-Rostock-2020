@@ -32,7 +32,7 @@ public class PairImpl<T, K> implements Pair<T, K> {
             return true;
         }
         if (obj instanceof PairImpl) {
-            PairImpl<T, K> comparable = (PairImpl<T, K>) obj;
+            PairImpl<?, ?> comparable = (PairImpl<?, ?>) obj;
             return comparable.getFirst().equals(firstValue) && comparable.getSecond().equals(secondValue);
         }
         return false;
