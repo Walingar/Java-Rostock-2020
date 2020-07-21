@@ -17,12 +17,12 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
         try {
             if (!file.exists()) {
-                if (file.getParentFile().mkdirs() && file.createNewFile()) {
-                    execute(file, data, dataEncoding, fileEncoding);
+                if (!file.getParentFile().mkdirs() || !file.createNewFile()) {
+                    System.out.println("File doesn't exist and it paths as well as itself couldn't be created.");
+                    return;
                 }
-            } else {
-                execute(file, data, dataEncoding, fileEncoding);
             }
+            execute(file, data, dataEncoding, fileEncoding);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
