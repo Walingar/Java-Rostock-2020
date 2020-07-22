@@ -10,11 +10,10 @@ public class FileEncodingReaderImpl implements FileEncodingReader {
     public Reader read(File file, Charset fileEncoding) {
         try {
             InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-            Reader inputStreamReader = new InputStreamReader(inputStream, fileEncoding);
-            return inputStreamReader;
+            return new InputStreamReader(inputStream, fileEncoding);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.toString());
             return null;
         }
     }
