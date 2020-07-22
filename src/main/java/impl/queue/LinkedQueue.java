@@ -4,33 +4,33 @@ import api.queue.IntQueue;
 
 public class LinkedQueue implements IntQueue {
     private QueueNode front;
+    private QueueNode end;
     private final int capacity;
+    private int size;
 
     public LinkedQueue(int maxSize) {
         front = null;
+        end = null;
         capacity = maxSize;
+        size = 0;
     }
 
     @Override
     public void add(int input) {
-        int currentSize = getSize();
-        if (currentSize == capacity) {
+        if (size == capacity) {
             throw new IllegalStateException();
         }
 
         QueueNode newNode = new QueueNode(input);
-
         if (front == null) {
-            newNode.setNext(null);
             front = newNode;
+        } else {
+            QueueNode currentEnd = end;
+            currentEnd.setNext(newNode);
+            newNode.setPrev(currentEnd);
         }
-
-        QueueNode iterator = front;
-        while (iterator.getNext() != null) {
-            iterator = iterator.getNext();
-        }
-        iterator.setNext(newNode);
-        newNode.setNext(null);
+        end = newNode;
+        size++;
     }
 
     @Override
@@ -41,6 +41,12 @@ public class LinkedQueue implements IntQueue {
 
         int value = front.getKey();
         front = front.getNext();
+        size--;
+
+        if (front != null) {
+            front.setPrev(null);
+        }
+
         return value;
     }
 
@@ -56,28 +62,19 @@ public class LinkedQueue implements IntQueue {
 
     @Override
     public int getSize() {
-        if (front == null) {
-            return 0;
-        }
-
-        QueueNode iterator = front;
-        int counter = 1;
-
-        while (iterator.getNext() != null) {
-            iterator = iterator.getNext();
-            counter++;
-        }
-        return counter;
+        return size;
     }
 
     private static class QueueNode {
         private int key;
+        private QueueNode prev;
         private QueueNode next;
 
         public QueueNode(int key)
         {
             this.key = key;
-            this.next = null;
+            next = null;
+            prev = null;
         }
 
         public int getKey() {
@@ -90,6 +87,10 @@ public class LinkedQueue implements IntQueue {
 
         public void setNext(QueueNode next) {
             this.next = next;
+        }
+
+        public void setPrev(QueueNode prev) {
+            this.prev = prev;
         }
     }
 }
