@@ -7,31 +7,26 @@ import java.time.Month;
 public class DayTemperatureInfoParser implements api.weather.DayTemperatureInfoParser {
     @Override
     public DayTemperatureInfo parse(String rawData) {
-        int stringLength = rawData.length();
-        int nonLetterCounter = 0; // MAX = 3
-        boolean negativeTemperature = false;
+        int nonLetterCounter = 0; // MAX = 2
 
         StringBuilder dayString = new StringBuilder();
         StringBuilder monthString = new StringBuilder();
         StringBuilder temperatureString = new StringBuilder();
 
-        for (int stringIterator = 0; stringIterator < stringLength; stringIterator++) {
-            char currentElement = rawData.charAt(stringIterator);
+        for (char currentChar : rawData.toCharArray()) {
 
-            if (Character.isWhitespace(currentElement) || currentElement == '.') {
+            if (Character.isWhitespace(currentChar) || currentChar == '.') {
                 nonLetterCounter++;
 
             } else {
                 if (nonLetterCounter == 0) {
-                    dayString.append(currentElement);
+                    dayString.append(currentChar);
                 }
                 if (nonLetterCounter == 1) {
-                    monthString.append(currentElement);
+                    monthString.append(currentChar);
                 }
                 if (nonLetterCounter == 2) {
-                    if (currentElement == '-') {
-                        negativeTemperature = true;
-                    } else temperatureString.append(currentElement);
+                    temperatureString.append(currentChar);
                 }
             }
 
@@ -46,7 +41,6 @@ public class DayTemperatureInfoParser implements api.weather.DayTemperatureInfoP
 
         //TEMPERATURE
         int temperature = Integer.parseInt(temperatureString.toString());
-        if (negativeTemperature) temperature = temperature * (-1);
 
         return new DayTemperatureInfoImpl(day, month, temperature);
     }
