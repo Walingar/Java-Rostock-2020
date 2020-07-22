@@ -70,8 +70,7 @@ public class LinkedQueue implements IntQueue {
         private QueueNode prev;
         private QueueNode next;
 
-        public QueueNode(int key)
-        {
+        public QueueNode(int key) {
             this.key = key;
             next = null;
             prev = null;
