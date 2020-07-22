@@ -3,13 +3,11 @@ package impl.queue;
 import api.queue.IntQueue;
 
 public class LinkedQueue implements IntQueue {
-    private QNode front;
-    private QNode end;
+    private QueueNode front;
     private final int capacity;
 
     public LinkedQueue(int maxSize) {
         front = null;
-        end = null;
         capacity = maxSize;
     }
 
@@ -20,55 +18,49 @@ public class LinkedQueue implements IntQueue {
             throw new IllegalStateException();
         }
 
-        QNode newNode = new QNode(input);
+        QueueNode newNode = new QueueNode(input);
 
-        if (this.front == null) {
-            newNode.setPrev(null);
+        if (front == null) {
             newNode.setNext(null);
-            this.front = newNode;
+            front = newNode;
         }
 
-        QNode iterator = front;
+        QueueNode iterator = front;
         while (iterator.getNext() != null) {
             iterator = iterator.getNext();
         }
         iterator.setNext(newNode);
-        newNode.setPrev(iterator);
         newNode.setNext(null);
-        this.end = newNode;
     }
 
     @Override
     public Integer remove() {
 
-        if (this.front == null)
+        if (front == null)
             return null;
 
         int value = front.getKey();
-        this.front = front.getNext();
-        if (this.front != null) {
-            this.front.setPrev(null);
-        }
+        front = front.getNext();
         return value;
     }
 
     @Override
     public Integer element() {
 
-        if (this.front == null) {
+        if (front == null) {
             return null;
         }
 
-        return this.front.getKey();
+        return front.getKey();
     }
 
     @Override
     public int getSize() {
-        if (this.front == null) {
+        if (front == null) {
             return 0;
         }
 
-        QNode iterator = this.front;
+        QueueNode iterator = front;
         int counter = 1;
 
         while (iterator.getNext() != null) {
@@ -76,5 +68,28 @@ public class LinkedQueue implements IntQueue {
             counter++;
         }
         return counter;
+    }
+
+    private static class QueueNode {
+        private int key;
+        private QueueNode next;
+
+        public QueueNode(int key)
+        {
+            this.key = key;
+            this.next = null;
+        }
+
+        public int getKey() {
+            return key;
+        }
+
+        public QueueNode getNext() {
+            return next;
+        }
+
+        public void setNext(QueueNode next) {
+            this.next = next;
+        }
     }
 }
