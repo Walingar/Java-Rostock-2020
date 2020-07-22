@@ -12,29 +12,24 @@ public class ExpressionParserImpl implements ExpressionParser {
 
         if (expression == null) {
             throw new IllegalArgumentException("expression is null");
-        } else {
-            expression = expression.replaceAll("\\s+", ""); //removes all whitespaces in expression
-            int expressionLength = expression.length();
-            String currentInt = "";
-            String currentOp = "";
+        }
+        int expressionLength = expression.length();
+        String currentInt = "";
+        String currentOp = "";
 
-            int output = 0;
+        int output = 0;
 
-            for (int characterIndex = 0; characterIndex < expressionLength; characterIndex++) {
-                char tempElement = expression.charAt(characterIndex);
+        for (int characterIndex = 0; characterIndex < expressionLength; characterIndex++) {
+            char tempElement = expression.charAt(characterIndex);
 
-                // Case: char is letter
-                if (Character.isLetter(tempElement)) {
-                    throw new ParseException("expression contains letters");
-                }
+            if (!Character.isWhitespace(tempElement)) {
 
-                // Case: char is digit
                 if (Character.isDigit(tempElement)) {
                     currentInt += tempElement;
                 }
 
                 // Case: char is +/- OR end of string
-                if (!Character.isDigit(tempElement) || characterIndex == expressionLength - 1) {
+                if (tempElement == '+' || tempElement == '-' || characterIndex == expressionLength - 1) {
 
                     //Case: - at the start of the expression
                     if (tempElement == '-' && characterIndex == 0) {
@@ -67,12 +62,10 @@ public class ExpressionParserImpl implements ExpressionParser {
                         currentInt = "";
                         currentOp = "" + tempElement;
                     }
-                }
+                } else throw new ParseException("Faced unexpected char");
             }
-
-            return output;
         }
+        return output;
     }
-
-
 }
+
