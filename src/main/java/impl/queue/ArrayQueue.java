@@ -5,7 +5,6 @@ import api.queue.IntQueue;
 public class ArrayQueue implements IntQueue {
 
     private final int capacity;
-    private int currentSize;
     private final Integer[] arrayQueue;
     private int currentIndex;
 
@@ -13,7 +12,6 @@ public class ArrayQueue implements IntQueue {
         capacity = maxSize;
         arrayQueue = new Integer[capacity];
         currentIndex = 0;
-        currentSize = 0;
     }
 
     @Override
@@ -51,9 +49,10 @@ public class ArrayQueue implements IntQueue {
     @Override
     public int getSize() {
         int counter = 0;
-        for (int i = 0; i < arrayQueue.length; i ++)
+        for (int i = 0; i < arrayQueue.length; i ++) {
             if (arrayQueue[i] != null)
-                counter ++;
+                counter++;
+        }
         return counter;
     }
 }
