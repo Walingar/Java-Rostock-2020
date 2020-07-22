@@ -13,59 +13,43 @@ public class ExpressionParserImpl implements ExpressionParser {
         if (expression == null) {
             throw new IllegalArgumentException("expression is null");
         }
-        int expressionLength = expression.length();
-        String currentInt = "";
-        String currentOp = "";
-
         int output = 0;
+        StringBuilder expressionParseBuilder = new StringBuilder();
 
-        for (int characterIndex = 0; characterIndex < expressionLength; characterIndex++) {
-            char tempElement = expression.charAt(characterIndex);
 
-            if (!Character.isWhitespace(tempElement)) {
-
-                if (Character.isDigit(tempElement)) {
-                    currentInt += tempElement;
-                }
-
-                // Case: char is +/- OR end of string
-                if (tempElement == '+' || tempElement == '-' || characterIndex == expressionLength - 1) {
-
-                    //Case: - at the start of the expression
-                    if (tempElement == '-' && characterIndex == 0) {
-                        currentOp = "" + tempElement;
+        for (char currentChar : expression.toCharArray()) {
+            if (!Character.isWhitespace(currentChar)) {
+                if (Character.isDigit(currentChar)) {
+                    expressionParseBuilder.append(currentChar);
+                } else {
+                    if (currentChar == '-' || currentChar == '+') {
+                        if (expressionParseBuilder.length() != 0) {
+                            output = calculate(expressionParseBuilder, output);
+                            expressionParseBuilder.setLength(0);
+                        }
+                        if (currentChar == '-') {
+                            expressionParseBuilder.append(currentChar);
+                        }
                     } else {
-                        //Case: currentInt is out of Int-Range
-                        long check = Long.parseLong(currentInt);
-                        if (check > Integer.MAX_VALUE) {
-                            throw new ParseException("parsed number is out of Int-Range");
-                        }
-
-                        int parsedInt = Integer.parseInt(currentInt);
-                        if (currentOp == "") {
-                            output = parsedInt;
-                        } else {
-                            if (currentOp.equals("+")) {
-                                long checkOutput = output + parsedInt;
-                                if (checkOutput >= Integer.MAX_VALUE || checkOutput <= Integer.MIN_VALUE) {
-                                    throw new ArithmeticException("output out of Range");
-                                }
-                                output += parsedInt;
-                            } else if (currentOp.equals("-")) {
-                                long checkOutput = output - parsedInt;
-                                if (checkOutput >= Integer.MAX_VALUE || checkOutput <= Integer.MIN_VALUE) {
-                                    throw new ArithmeticException("output out of Range");
-                                }
-                                output -= parsedInt;
-                            }
-                        }
-                        currentInt = "";
-                        currentOp = "" + tempElement;
+                        throw new ParseException("Unknown char in expression:" + currentChar);
                     }
-                } else throw new ParseException("Faced unexpected char");
+                }
             }
         }
-        return output;
+        return calculate(expressionParseBuilder, output);
     }
+
+    private int calculate(StringBuilder expressionParseBuilder, int output) throws ParseException {
+        try {
+            String expressionParseString = expressionParseBuilder.toString();
+            int expressionInteger = Integer.parseInt(expressionParseString);
+            return Math.addExact(expressionInteger, output);
+        } catch (NumberFormatException numberFormatException) {
+            throw new ParseException("Expression is out of Integer-Range");
+        }
+
+    }
+
+
 }
 
