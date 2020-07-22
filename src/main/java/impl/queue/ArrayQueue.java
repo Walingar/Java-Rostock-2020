@@ -6,53 +6,51 @@ public class ArrayQueue implements IntQueue {
 
     private final int capacity;
     private final Integer[] arrayQueue;
-    private int currentIndex;
+    private int headIndex;
+    private int size;
 
     public ArrayQueue(int maxSize) {
         capacity = maxSize;
         arrayQueue = new Integer[capacity];
-        currentIndex = 0;
+        headIndex = 0;
+        size = 0;
     }
 
     @Override
     public void add(int input) {
-        if (currentIndex == capacity) {
+        if (size == capacity) {
             throw new IllegalStateException();
         }
-        arrayQueue[currentIndex] = input;
-        currentIndex++;
+        int insertIndex = (size + headIndex) % capacity;
+        arrayQueue[insertIndex] = input;
+        size++;
 
     }
 
     @Override
     public Integer remove() {
-        if (currentIndex == 0) {
+        if (size == 0) {
             return null;
         }
+        Integer removedInteger = arrayQueue[headIndex];
+        arrayQueue[headIndex] = 0;
+        headIndex++;
+        size--;
 
-        int removedInteger = arrayQueue[0];
-        for (int i = 0; i < arrayQueue.length - 1; i++) {
-            arrayQueue[i] = arrayQueue[i + 1];
+        if (headIndex == capacity) {
+            headIndex = 0;
         }
-        arrayQueue[arrayQueue.length - 1] = null;
-        arrayQueue[currentIndex-1] = null;
-        currentIndex--;
         return removedInteger;
 
     }
 
     @Override
     public Integer element() {
-        return arrayQueue[0];
+        return arrayQueue[headIndex];
     }
 
     @Override
     public int getSize() {
-        int counter = 0;
-        for (int i = 0; i < arrayQueue.length; i ++) {
-            if (arrayQueue[i] != null)
-                counter++;
-        }
-        return counter;
+        return size;
     }
 }
