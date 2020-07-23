@@ -1,7 +1,5 @@
 package impl.queue;
 
-import api.queue.IntQueue;
-
 public class LinkedQueueImpl extends AbstractQueueImpl {
     private LinkedQueueNode head;
     private LinkedQueueNode tail;
