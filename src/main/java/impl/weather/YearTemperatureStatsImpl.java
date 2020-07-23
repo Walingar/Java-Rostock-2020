@@ -91,9 +91,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         }
 
         private List<DayTemperatureInfo> getSortedTemperature() {
-            Collection<DayTemperatureInfo> knownDays = temperatures.values();
-            ArrayList<DayTemperatureInfo> output = new ArrayList<>(knownDays.size());
-            output.addAll(knownDays);
+            List<DayTemperatureInfo> output = new ArrayList<>(temperatures.values());
             output.sort(Comparator.comparingInt(DayTemperatureInfo::getTemperature));
             return output;
         }
