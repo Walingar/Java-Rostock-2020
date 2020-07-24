@@ -6,7 +6,7 @@ import org.junit.Test
 import java.io.File
 import java.time.Month
 
-internal class DayTemperatureInfoImplParserTest {
+internal class DayTemperatureInfoParserTest {
     private fun readRawDataFromFile(fileName: String = "data/temperature.txt") =
         File(fileName).readLines(Charsets.UTF_8).map { it.trim() }
 
@@ -14,7 +14,7 @@ internal class DayTemperatureInfoImplParserTest {
         val parser = DayTemperatureInfoParserFactory.getInstance()
         val stats = YearTemperatureStatsFactory.getInstance()
         lines.forEach { line ->
-            stats.updateStats(parser.parse(line) as DayTemperatureInfoImpl?)
+            stats.updateStats(parser.parse(line))
         }
         return stats
     }

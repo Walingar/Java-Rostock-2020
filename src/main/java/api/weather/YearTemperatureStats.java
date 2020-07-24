@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 public interface YearTemperatureStats {
-    void updateStats(DayTemperatureInfoImpl info);
+    void updateStats(DayTemperatureInfo info);
 
     Double getAverageTemperature(Month month);
 
     Map<Month, Integer> getMaxTemperature();
 
-    List<DayTemperatureInfoImpl> getSortedTemperature(Month month);
+    List<DayTemperatureInfo> getSortedTemperature(Month month);
 
-    DayTemperatureInfoImpl getTemperature(int day, Month month);
+    DayTemperatureInfo getTemperature(int day, Month month);
 }
