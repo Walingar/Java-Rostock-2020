@@ -13,7 +13,7 @@ internal class YearTemperatureStatsImplTest {
         stats: YearTemperatureStats = YearTemperatureStatsFactory.getInstance()
     ) = stats.apply {
         info.forEach {
-            updateStats(it as DayTemperatureInfoImpl?)
+            updateStats(it)
         }
     }
 

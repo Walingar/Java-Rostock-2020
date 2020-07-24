@@ -1,14 +1,14 @@
 package impl.weather;
 
+import api.weather.DayTemperatureInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Month;
 import java.util.Comparator;
 
-public class DayTemperatureInfoImpl implements api.weather.DayTemperatureInfo, Comparable<DayTemperatureInfoImpl> {
+public class DayTemperatureInfoImpl implements DayTemperatureInfo {
     private final int day;
     private final Month month;
-
     private final int temperature;
 
     public DayTemperatureInfoImpl(int day, Month month, int temperature){
@@ -25,15 +25,10 @@ public class DayTemperatureInfoImpl implements api.weather.DayTemperatureInfo, C
     public Month getMonth() {
         return month;
     }
+
     @Override
     public int getTemperature() {
         return temperature;
     }
 
-    @Override
-    public int compareTo(@NotNull DayTemperatureInfoImpl o) {
-        if(this.getTemperature() > o.getTemperature()) return 1;
-        if(this.getTemperature() < o.getTemperature()) return -1;
-        else return 0;
-    }
 }

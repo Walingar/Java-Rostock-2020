@@ -6,101 +6,114 @@ import api.weather.YearTemperatureStats;
 import java.time.Month;
 import java.util.*;
 
-
-import static java.time.Month.*;
-
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
-    private Map<Month, Map<Integer, DayTemperatureInfoImpl>> weatherMap;
+    private final Map<Month, MonthInfo> weatherMap;
 
-    public YearTemperatureStatsImpl(){
-        weatherMap = new HashMap<>();
+    public YearTemperatureStatsImpl() {
+        weatherMap = new EnumMap<>(Month.class);
     }
 
     @Override
-    public void updateStats(DayTemperatureInfoImpl info) {
-        int day = info.getDay();
+    public void updateStats(DayTemperatureInfo info) {
         Month month = info.getMonth();
 
-        if (weatherMap.containsKey(month) == true) {
-            Map<Integer, DayTemperatureInfoImpl> mapMonth = weatherMap.get(month);
-            mapMonth.put(day, info);
-            weatherMap.put(month, mapMonth);
-        } else {
-            Map<Integer, DayTemperatureInfoImpl> newMonth = new HashMap<>(month.length(false));
-            newMonth.put(day, info);
-            weatherMap.put(month, newMonth);
-        }
+        weatherMap.putIfAbsent(month, new MonthInfo(month));
+        MonthInfo monthInfo = weatherMap.get(month);
+        monthInfo.updateMonthStats(info);
     }
+
 
     @Override
     public Double getAverageTemperature(Month month) {
-        if (weatherMap.containsKey(month) == true) {
-            Map<Integer, DayTemperatureInfoImpl> mapMonth = weatherMap.get(month);
-            int days = mapMonth.size();
-            int sum = 0;
-
-            Collection<DayTemperatureInfoImpl> elements = mapMonth.values();
-            for (DayTemperatureInfoImpl day : elements) {
-                sum = sum + day.getTemperature();
-            }
-            return (double) sum / days;
+        if (weatherMap.containsKey(month)) {
+            return weatherMap.get(month).getAverageTemperature();
         }
         return null;
     }
 
     @Override
     public Map<Month, Integer> getMaxTemperature() {
-        Collection<Map<Integer, DayTemperatureInfoImpl>> months = weatherMap.values();
-        Map<Month, Integer> output = new HashMap<>();
+        Map<Month, Integer> output = new EnumMap<>(Month.class);
+        Collection<MonthInfo> months = weatherMap.values();
 
-        for (Map<Integer, DayTemperatureInfoImpl> month : months) {
-            Collection<DayTemperatureInfoImpl> days = month.values();
-            Integer monthMaxTemperature = null;
-            Month currentMonth = null;
-
-            for (DayTemperatureInfoImpl day : days) {
-                int dayTemperature = day.getTemperature();
-                currentMonth = day.getMonth();
-
-                if (monthMaxTemperature == null || monthMaxTemperature < dayTemperature) {
-                    monthMaxTemperature = dayTemperature;
-                }
-            }
-            output.put(currentMonth, monthMaxTemperature);
+        for(MonthInfo month : months){
+            output.put(month.month, month.getMaxTemperature());
         }
 
         return output;
     }
 
     @Override
-    public List<DayTemperatureInfoImpl> getSortedTemperature(Month month) {
-        List<DayTemperatureInfoImpl> emptyList= new ArrayList<DayTemperatureInfoImpl>();
+    public List<DayTemperatureInfo> getSortedTemperature(Month month) {
 
-        if (weatherMap.containsKey(month) == true) {
-            Map<Integer, DayTemperatureInfoImpl> mapMonth = weatherMap.get(month);
-            Collection<DayTemperatureInfoImpl> days = mapMonth.values();
-            List<DayTemperatureInfoImpl> output = new ArrayList<>(days);
-            Collections.sort(output);
-            return output;
+        if (weatherMap.containsKey(month)) {
+            return weatherMap.get(month).getSortedTemperature();
         }
-        return emptyList;
+        return new ArrayList<>();
     }
 
     @Override
-    public DayTemperatureInfoImpl getTemperature(int day, Month month) {
-
-        if (weatherMap.containsKey(month) == true) {
-            Map<Integer, DayTemperatureInfoImpl> mapMonth = weatherMap.get(month);
-
-            if (mapMonth.containsKey(day) == true) {
-                DayTemperatureInfoImpl output = mapMonth.get(day);
-                return output;
-
-            }
-            return null;
+    public DayTemperatureInfo getTemperature(int day, Month month) {
+        if (weatherMap.containsKey(month)){
+            return weatherMap.get(month).getTemperature(day);
         }
+
         return null;
     }
 
 
+    private static class MonthInfo {
+        private final Month month;
+        private final Map<Integer, DayTemperatureInfo> temperatureMap;
+        private Double averageTemperature;
+        private Integer maxTemperature;
+        private Integer quantityOfDays;
+
+        public MonthInfo(Month month) {
+            this.month = month;
+            temperatureMap = new LinkedHashMap<>(month.length(false));
+            averageTemperature = null;
+            maxTemperature = null;
+            quantityOfDays = 0;
+        }
+
+        public Double getAverageTemperature(){
+            return averageTemperature;
+        }
+
+        public Integer getMaxTemperature(){
+            return maxTemperature;
+        }
+
+        private void updateMonthStats(DayTemperatureInfo info){
+            int day = info.getDay();
+            int temperature = info.getTemperature();
+            temperatureMap.put(day, info);
+            quantityOfDays++;
+
+            if(maxTemperature == null || maxTemperature < temperature){
+                maxTemperature = temperature;
+            }
+
+            if(averageTemperature == null){
+                averageTemperature = (double) temperature;
+            } else {
+                averageTemperature = (((quantityOfDays-1)*averageTemperature)+temperature)/quantityOfDays;
+            }
+        }
+
+        private DayTemperatureInfo getTemperature(int day){
+            if(temperatureMap.containsKey(day)){
+                return temperatureMap.get(day);
+            }
+            return null;
+        }
+
+        private List<DayTemperatureInfo> getSortedTemperature(){
+            List<DayTemperatureInfo> output = new ArrayList<>(temperatureMap.values());
+            output.sort(Comparator.comparingInt(DayTemperatureInfo::getTemperature));
+            return output;
+        }
+
+    }
 }

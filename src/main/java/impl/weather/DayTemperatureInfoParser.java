@@ -1,12 +1,10 @@
 package impl.weather;
 
-import api.weather.DayTemperatureInfo;
-
 import java.time.Month;
 
 public class DayTemperatureInfoParser implements api.weather.DayTemperatureInfoParser {
     @Override
-    public DayTemperatureInfo parse(String rawData) {
+    public api.weather.DayTemperatureInfo parse(String rawData) {
         int nonLetterCounter = 0; // MAX = 2
 
         StringBuilder dayString = new StringBuilder();
