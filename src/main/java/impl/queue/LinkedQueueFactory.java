@@ -8,5 +8,4 @@ public class LinkedQueueFactory {
         return new LinkedQueue(maxSize);
     }
 
-
 }

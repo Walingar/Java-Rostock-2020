@@ -1,18 +1,11 @@
 package impl.queue;
 
-import api.queue.IntQueue;
-
-public class LinkedQueue implements IntQueue {
+public class LinkedQueue extends AbstractQueue {
     private QueueNode front;
     private QueueNode end;
-    private final int capacity;
-    private int size;
 
-    public LinkedQueue(int maxSize) {
-        front = null;
-        end = null;
-        capacity = maxSize;
-        size = 0;
+    public LinkedQueue(int capacity) {
+        super(capacity);
     }
 
     @Override
@@ -20,7 +13,6 @@ public class LinkedQueue implements IntQueue {
         if (size == capacity) {
             throw new IllegalStateException();
         }
-
         QueueNode newNode = new QueueNode(input);
         if (front == null) {
             front = newNode;
@@ -29,51 +21,39 @@ public class LinkedQueue implements IntQueue {
             currentEnd.setNext(newNode);
             newNode.setPrev(currentEnd);
         }
-        end = newNode;
         size++;
+        end = newNode;
     }
 
     @Override
     public Integer remove() {
-
-        if (front == null)
+        if (size == 0) {
             return null;
-
+        }
         int value = front.getKey();
         front = front.getNext();
         size--;
-
         if (front != null) {
             front.setPrev(null);
         }
-
         return value;
     }
 
     @Override
     public Integer element() {
-
-        if (front == null) {
+        if (size == 0) {
             return null;
         }
-
         return front.getKey();
     }
 
-    @Override
-    public int getSize() {
-        return size;
-    }
-
     private static class QueueNode {
-        private int key;
+        private final int key;
         private QueueNode prev;
         private QueueNode next;
 
         public QueueNode(int key) {
             this.key = key;
-            next = null;
-            prev = null;
         }
 
         public int getKey() {
