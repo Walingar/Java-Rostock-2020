@@ -8,13 +8,4 @@ public class NumberPairImpl<T extends Number, K extends Number> extends PairImpl
         super(first, second);
     }
 
-    @Override
-    public K getFirst() {
-        return null;
-    }
-
-    @Override
-    public T getSecond() {
-        return null;
-    }
 }
