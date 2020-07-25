@@ -19,7 +19,6 @@ public class LinkedQueue extends AbstractQueue {
         } else {
             QueueNode currentEnd = end;
             currentEnd.setNext(newNode);
-            newNode.setPrev(currentEnd);
         }
         size++;
         end = newNode;
@@ -33,9 +32,6 @@ public class LinkedQueue extends AbstractQueue {
         int value = front.getKey();
         front = front.getNext();
         size--;
-        if (front != null) {
-            front.setPrev(null);
-        }
         return value;
     }
 
@@ -49,7 +45,6 @@ public class LinkedQueue extends AbstractQueue {
 
     private static class QueueNode {
         private final int key;
-        private QueueNode prev;
         private QueueNode next;
 
         public QueueNode(int key) {
@@ -66,10 +61,6 @@ public class LinkedQueue extends AbstractQueue {
 
         public void setNext(QueueNode next) {
             this.next = next;
-        }
-
-        public void setPrev(QueueNode prev) {
-            this.prev = prev;
         }
     }
 }
