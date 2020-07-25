@@ -13,9 +13,9 @@ public class ExpressionParserImpl implements ExpressionParser {
         if (expression == null) {
             throw new IllegalArgumentException("expression is null");
         }
+
         int output = 0;
         StringBuilder expressionParseBuilder = new StringBuilder();
-
 
         for (char currentChar : expression.toCharArray()) {
             if (!Character.isWhitespace(currentChar)) {
@@ -27,9 +27,7 @@ public class ExpressionParserImpl implements ExpressionParser {
                             output = calculate(expressionParseBuilder, output);
                             expressionParseBuilder.setLength(0);
                         }
-                        if (currentChar == '-') {
-                            expressionParseBuilder.append(currentChar);
-                        }
+                        expressionParseBuilder.append(currentChar);
                     } else {
                         throw new ParseException("Unknown char in expression:" + currentChar);
                     }
@@ -47,9 +45,6 @@ public class ExpressionParserImpl implements ExpressionParser {
         } catch (NumberFormatException numberFormatException) {
             throw new ParseException("Expression is out of Integer-Range");
         }
-
     }
-
-
 }
 
