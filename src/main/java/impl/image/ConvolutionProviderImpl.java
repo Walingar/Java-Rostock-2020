@@ -1,7 +1,6 @@
 package impl.image;
 
 import api.image.ConvolutionProvider;
-import api.image.ImageConverter;
 
 import java.awt.*;
 
@@ -36,22 +35,15 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
                         int rowDisplacement = imageRow + rowShift;
                         int columnDisplacement = imageColumn + columnShift;
 
-                        // if kernel coordinates based on the selected pixel fits is inside the image
                         if ((rowDisplacement > -1) && (rowDisplacement < imageHeight) &&
                                 (columnDisplacement > -1) && (columnDisplacement < imageWidth)
                         ) {
                             Color imagePixel = image[rowDisplacement][columnDisplacement];
-                            int redTemp = imagePixel.getRed();
-                            int greenTemp = imagePixel.getGreen();
-                            int blueTemp = imagePixel.getBlue();
+                            double kernelMultiplier = kernel[kernelRow][kernelColumn];
 
-                            redTemp = (int) (redTemp * kernel[kernelRow][kernelColumn]);
-                            greenTemp = (int) (greenTemp * kernel[kernelRow][kernelColumn]);
-                            blueTemp = (int) (blueTemp * kernel[kernelRow][kernelColumn]);
-
-                            redOutput += redTemp;
-                            greenOutput += greenTemp;
-                            blueOutput += blueTemp;
+                            redOutput += (int) (imagePixel.getRed() * kernelMultiplier);
+                            greenOutput += (int) (imagePixel.getGreen() * kernelMultiplier);
+                            blueOutput += (int) (imagePixel.getBlue() * kernelMultiplier);
                         }
                     }
                 }
@@ -60,6 +52,5 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         }
         return output;
     }
-
 }
 
