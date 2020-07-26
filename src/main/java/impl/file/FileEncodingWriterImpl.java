@@ -16,7 +16,9 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
         try {
             if (!file.exists()) {
-                if (!file.getParentFile().mkdirs() || !file.createNewFile()){
+                boolean checkDirectoryCreation = file.getParentFile().mkdirs();
+                boolean checkFileCreation = file.createNewFile();
+                if (!checkDirectoryCreation || !checkFileCreation){
                     System.out.println("File not existing and not creatable");
                     return;
                 }
