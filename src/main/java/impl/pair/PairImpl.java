@@ -4,11 +4,11 @@ import api.pair.Pair;
 
 import java.util.Objects;
 
-public class PairImpl<K,T> implements Pair<K,T> {
+public class PairImpl<K, T> implements Pair<K, T> {
     private final K first;
     private final T second;
 
-    public PairImpl(K first, T second){
+    public PairImpl(K first, T second) {
         this.first = first;
         this.second = second;
     }
@@ -35,7 +35,7 @@ public class PairImpl<K,T> implements Pair<K,T> {
         }
         if (obj instanceof PairImpl) {
             PairImpl<?, ?> comparable = (PairImpl<?, ?>) obj;
-                return comparable.getFirst().equals(first) && comparable.getSecond().equals(second);
+            return comparable.getFirst().equals(first) && comparable.getSecond().equals(second);
         }
         return false;
     }
