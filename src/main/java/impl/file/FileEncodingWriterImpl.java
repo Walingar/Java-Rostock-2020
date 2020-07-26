@@ -14,7 +14,6 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
 
     @Override
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
-
         try {
             if (!file.exists()) {
                 if (!file.getParentFile().mkdirs() || !file.createNewFile()){
@@ -22,7 +21,6 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
                     return;
                 }
             }
-
             Reader reader = new InputStreamReader(data, dataEncoding);
             OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
             Writer writer = new OutputStreamWriter(outputStream, fileEncoding);
@@ -32,6 +30,5 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
         } catch (IOException e) {
             System.out.println(e.toString());
         }
-
     }
 }
