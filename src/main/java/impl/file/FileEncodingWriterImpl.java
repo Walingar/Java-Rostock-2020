@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 public class FileEncodingWriterImpl implements FileEncodingWriter {
     @Override
     public void write(File file, InputStream data, Charset dataEncoding) {
-        this.write(file, data, dataEncoding, StandardCharsets.UTF_8);
+        write(file, data, dataEncoding, StandardCharsets.UTF_8);
     }
 
     @Override
@@ -17,12 +17,6 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
 
         try {
             if (!file.exists()) {
-
-                File newFile = new File("ab.txt");
-                if (newFile.createNewFile()) {
-                    System.out.println("File created: " + newFile.getName());
-                }
-
                 if (!file.getParentFile().mkdirs() || !file.createNewFile()){
                     System.out.println("File not existing and not creatable");
                     return;
