@@ -8,3 +8,4 @@ public class FileEncodingWriterFactory {
         return new FileEncodingWriterImpl();
     }
 }
+
